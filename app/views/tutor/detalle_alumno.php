@@ -1,0 +1,77 @@
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: sans-serif;">
+    <a href="<?= base_url('dashboard') ?>" style="text-decoration: none; color: #007bff;">← Volver al Panel</a>
+    
+    <div style="display: flex; align-items: center; gap: 20px; margin-top: 20px;">
+        <div style="background: #ddd; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;">👤</div>
+        <div>
+            <h2 style="margin: 0;"><?= $alumno['nombre'] ?></h2>
+            <p style="margin: 5px 0; color: #666;"><?= $alumno['email'] ?></p>
+        </div>
+    </div>
+
+    <hr style="margin: 30px 0; border: 1px solid #eee;">
+    <h3>Lecciones Guiadas</h3>
+    <?php if (empty($lecciones)): ?>
+        <p style="color: #999; font-style: italic;">No hay lecciones personalizadas iniciadas.</p>
+    <?php else: ?>
+        <div style="display: grid; gap: 10px; margin-bottom: 30px;">
+            <?php foreach ($lecciones as $l): ?>
+                <div style="background: #fdfdfd; border-left: 5px solid #28a745; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="font-size: 1.1rem;"><?= htmlspecialchars($l['titulo']) ?></strong><br>
+                        <small style="color: #666;">Último avance: <?= date('d/m H:i', strtotime($l['fecha_actualizacion'])) ?></small>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: bold; color: #28a745;">
+                            <?= $l['completada'] ? '¡COMPLETADA! ✅' : 'En progreso (' . $l['ultimo_paso_completado'] . '/' . $l['total_pasos'] . ')' ?>
+                        </div>
+                        <div style="width: 150px; background: #eee; height: 8px; border-radius: 4px; margin-top: 5px; overflow: hidden;">
+                            <?php $porcentaje = ($l['ultimo_paso_completado'] / $l['total_pasos']) * 100; ?>
+                            <div style="width: <?= $porcentaje ?>%; background: #28a745; height: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
+    <h3>Historial de Actividades</h3>
+
+    <?php if (empty($progresos)): ?>
+        <p style="background: #fff3cd; padding: 20px; border-radius: 10px; color: #856404;">
+            Este alumno aún no ha realizado ninguna práctica.
+        </p>
+    <?php else: ?>
+        <div style="display: grid; gap: 15px;">
+            <?php foreach ($progresos as $p): ?>
+                <?php 
+                    // Decodificamos los datos extra (JSON)
+                    $extra = json_decode($p['datos_extra'], true); 
+                ?>
+                <div style="background: white; border: 1px solid #ddd; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div>
+                        <span style="background: #e7f3ff; color: #007bff; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
+                            <?= str_replace('-', ' ', $p['actividad_slug']) ?>
+                        </span>
+                        <h4 style="margin: 10px 0 5px;"><?= $p['puntos'] ?> Puntos conseguidos</h4>
+                        <small style="color: #999;"><?= date('d/m/Y H:i', strtotime($p['fecha'])) ?></small>
+                    </div>
+
+                    <div style="text-align: right; min-width: 200px; border-left: 1px solid #eee; padding-left: 20px;">
+                        <p style="margin: 0; font-size: 0.9rem; color: #444;"><strong>Detalles técnicos:</strong></p>
+                        <?php if ($extra): ?>
+                            <ul style="margin: 5px 0; padding: 0; list-style: none; font-size: 0.85rem; color: #666;">
+                                <?php foreach ($extra as $key => $val): ?>
+                                    <li><?= ucfirst($key) ?>: <?= $val ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p style="font-size: 0.8rem; color: #bbb;">Sin datos extra</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>

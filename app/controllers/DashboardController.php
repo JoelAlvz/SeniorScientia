@@ -11,21 +11,35 @@ class DashboardController extends Controller {
     }
 
     public function index() {
-        $email = $_SESSION['user_email'] ?? null;
-        
-        if (!$email) {
+        if (!isset($_SESSION['user_id'])) {
             header('Location: ' . base_url('login'));
             exit;
         }
 
-        $user = Usuario::findByEmail($email);
+        $db = Database::connect();
+        $misAlumnos = []; 
 
-        if ($user && isset($user['cuestionario_completado']) && $user['cuestionario_completado'] == 0) {
+        // Si es TUTOR, buscamos sus alumnos vinculados
+        if ($_SESSION['user_tipo'] === 'tutor') {
+            $stmt = $db->prepare("
+                SELECT u.id_usuario, u.nombre 
+                FROM usuarios u
+                JOIN vinculaciones v ON u.id_usuario = v.id_alumno
+                WHERE v.tutor_id = ?
+            ");
+            $stmt->execute([$_SESSION['user_id']]);
+            $misAlumnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        $user = Usuario::findByEmail($_SESSION['user_email']); 
+        
+        if ($user && $user['cuestionario_completado'] == 0 && $_SESSION['user_tipo'] === 'alumno') {
             $this->view('auth/bienvenida_fotos'); 
             return;
         }
 
-        $this->view('dashboard/index');
+        // Pasamos 'misAlumnos' a la vista
+        $this->view('dashboard/index', ['misAlumnos' => $misAlumnos]);
     }
     public function logout() {
         session_destroy();
