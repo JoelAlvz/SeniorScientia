@@ -16,13 +16,10 @@ class TutorController extends Controller {
     public function verAlumno($idAlumno) {
         $db = Database::connect();
 
-        // 1. Obtener datos básicos del alumno
         $stmt = $db->prepare("SELECT id_usuario, nombre, email FROM usuarios WHERE id_usuario = ?");
         $stmt->execute([$idAlumno]);
         $alumno = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // 2. Obtener el progreso de las LECCIONES POR PASOS (Las que diseña el tutor)
-        // Buscamos el título de la actividad y cuántos pasos tiene en total para la barra de progreso
         $stmt = $db->prepare("
             SELECT 
                 a.titulo, 
@@ -38,7 +35,6 @@ class TutorController extends Controller {
         $stmt->execute([$idAlumno]);
         $leccionesPasos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // 3. Obtener el progreso de JUEGOS LIBRES 
         $stmt = $db->prepare("SELECT * FROM progreso_actividades WHERE id_usuario = ? ORDER BY fecha DESC");
         $stmt->execute([$idAlumno]);
         $progresosLibres = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -46,8 +42,36 @@ class TutorController extends Controller {
         // 4. Enviamos todo a la vista
         $this->view('tutor/detalle_alumno', [
             'alumno' => $alumno,
-            'lecciones' => $leccionesPasos, // Nueva variable
-            'progresos' => $progresosLibres  // Tu variable de siempre
+            'lecciones' => $leccionesPasos, 
+            'progresos' => $progresosLibres 
         ]);
+    }
+
+    public function guardarmensaje() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_tipo'] !== 'tutor') {
+            header('Location: ' . base_url('login'));
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id_tutor = $_SESSION['user_id'];
+            $id_alumno = filter_input(INPUT_POST, 'id_alumno', FILTER_SANITIZE_NUMBER_INT);
+            $mensaje = trim(filter_input(INPUT_POST, 'mensaje_nota', FILTER_SANITIZE_SPECIAL_CHARS));
+
+            if (!empty($id_alumno) && !empty($mensaje)) {
+                $db = Database::connect();
+                $stmt = $db->prepare("INSERT INTO mensajes_tutores (id_tutor, id_alumno, mensaje) VALUES (?, ?, ?)");
+                $stmt->execute([$id_tutor, $id_alumno, $mensaje]);
+
+                //  GUARDAMOS EL MENSAJE FLASH DE ÉXITO
+               
+                $_SESSION['flash_success'] = "¡Nota de aliento enviada correctamente al alumno!";
+            }
+            
+            header('Location: ' . base_url('tutor/alumno/' . $id_alumno));
+            exit;
+        }
     }
 }

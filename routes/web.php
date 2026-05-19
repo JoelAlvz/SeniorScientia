@@ -33,3 +33,4 @@ $router->get('/actividad/ver/([0-9]+)', 'ActividadController@ver');
 $router->get('/actividad/avanzar/([0-9]+)', 'ActividadController@avanzar');
 $router->get('/practica/crear-secuencia', 'PracticaController@crearSecuencia');
 $router->post('/practica/guardar-secuencia', 'PracticaController@guardarSecuencia');
+$router->post('tutor/guardar-mensaje', 'TutorController@guardarmensaje');

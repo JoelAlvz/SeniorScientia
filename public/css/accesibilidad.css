@@ -1,0 +1,215 @@
+/* ==========================================================================
+   ESTILOS GENERALES DEL MENÚ FLOTANTE
+   ========================================================================== */
+#btn-accesibilidad {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#btn-accesibilidad:hover {
+    transform: scale(1.1);
+    background-color: #0056b3 !important;
+}
+
+#menu-accesibilidad button {
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+#menu-accesibilidad button:active {
+    transform: scale(0.95);
+}
+
+/* ==========================================================================
+   NIVEL 1: TEXTO GRANDE (A+)
+   ========================================================================== */
+body.texto-grande p, 
+body.texto-grande span, 
+body.texto-grande li, 
+body.texto-grande td,
+body.texto-grande small { 
+    font-size: 1.4rem !important; 
+    line-height: 1.6 !important;
+}
+body.texto-grande h1 { font-size: 3rem !important; }
+body.texto-grande h2 { font-size: 2.5rem !important; }
+body.texto-grande h3 { font-size: 2rem !important; }
+body.texto-grande h4 { font-size: 1.6rem !important; }
+body.texto-grande a, 
+body.texto-grande button,
+body.texto-grande input { 
+    font-size: 1.3rem !important; 
+}
+
+/* ==========================================================================
+   NIVEL 2: TEXTO GIGANTE (A++) - Pensado para problemas visuales severos
+   ========================================================================== */
+body.texto-gigante p, 
+body.texto-gigante span, 
+body.texto-gigante li, 
+body.texto-gigante td,
+body.texto-gigante small { 
+    font-size: 1.8rem !important; 
+    line-height: 1.7 !important;
+}
+body.texto-gigante h1 { font-size: 3.6rem !important; }
+body.texto-gigante h2 { font-size: 3.1rem !important; }
+body.texto-gigante h3 { font-size: 2.6rem !important; }
+body.texto-gigante h4 { font-size: 2.1rem !important; }
+body.texto-gigante a, 
+body.texto-gigante button,
+body.texto-gigante input { 
+    font-size: 1.6rem !important; 
+}
+
+/* ==========================================================================
+   MODO ALTO CONTRASTE (WCAG 2.1 - Fondo Oscuro / Texto Amarillo y Blanco)
+   ========================================================================== */
+body.alto-contraste {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+body.alto-contraste div, 
+body.alto-contraste section, 
+body.alto-contraste table,
+body.alto-contraste li {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-color: #ffcc00 !important; /* Bordes amarillos para delimitar secciones */
+    box-shadow: none !important;
+}
+
+body.alto-contraste h1, 
+body.alto-contraste h2, 
+body.alto-contraste h3, 
+body.alto-contraste h4 {
+    color: #ffcc00 !important;
+}
+
+body.alto-contraste p, 
+body.alto-contraste li, 
+body.alto-contraste td,
+body.alto-contraste strong {
+    color: #ffffff !important;
+}
+
+body.alto-contraste a, 
+body.alto-contraste button,
+body.alto-contraste input[type="submit"] {
+    background-color: #ffcc00 !important;
+    color: #000000 !important;
+    font-weight: bold !important;
+    border: 2px solid #ffffff !important;
+}
+
+body.alto-contraste a:hover, 
+body.alto-contraste button:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+body.alto-contraste input[type="number"],
+body.alto-contraste input[type="text"] {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffcc00 !important;
+}
+
+/* ==========================================================================
+   ASISTENTE VISUAL DEL CURSOR (Círculo Naranja)
+   ========================================================================== */
+
+/* El círculo naranja alrededor del ratón */
+
+.custom-cursor-circle {
+    width: 70px !important;
+    height: 70px !important;
+    margin-left: -17px !important; 
+    margin-top: -17px !important;
+    border: 3px solid #ff5722 !important;
+    border-radius: 50% !important;
+    position: fixed !important;
+    pointer-events: none !important; 
+    z-index: 100000 !important; 
+    background: rgba(255, 87, 34, 0.1) !important; 
+    display: none;
+
+    left: 0 !important;
+    top: 0 !important;
+    
+    transform-origin: center center;
+
+    transition: 
+        transform 0.08s ease-out, 
+        width 0.2s ease, 
+        height 0.2s ease, 
+        background-color 0.2s ease, 
+        border-color 0.2s ease !important;
+}
+
+.custom-cursor-dot {
+    width: 10px !important;
+    height: 10px !important;
+    background-color: #ff5722 !important; 
+    border-radius: 50% !important;
+    position: absolute !important; 
+    
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    
+    pointer-events: none !important;
+    transition: background-color 0.2s ease !important;
+}
+
+body.cursor-especial-activo .custom-cursor-circle.on-link .custom-cursor-dot {
+    background-color: #00e676 !important;
+}
+
+/* AJUSTE PARA ALTO CONTRASTE: La esfera se vuelve amarilla chillón para resaltar sobre negro */
+body.alto-contraste.cursor-especial-activo .custom-cursor-dot {
+    background-color: #ffcc00 !important; 
+}
+
+/* Punto central expansivo al hacer click */
+.cursor-click-effect {
+    width: 8px;
+    height: 8px;
+    background: #ff5722 !important;
+    border-radius: 50%;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 100001;
+    animation: clickExplosion 0.4s ease-out forwards;
+}
+
+@keyframes clickExplosion {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+}
+
+/* CAMBIO SIGNIFICATIVO EN ENLACES Y BOTONES CUANDO EL MODO CURSOR ESTÁ ACTIVO */
+body.cursor-especial-activo .custom-cursor-circle.on-link {
+    width: 60px !important; 
+    height: 60px !important;
+    margin-left: -10px !important; 
+    margin-top: -10px !important;  
+    border-color: #00e676 !important; 
+    background: rgba(0, 230, 118, 0.15) !important;
+}
+body.alto-contraste.cursor-especial-activo .cursor-click-effect {
+    background: #ffcc00 !important; 
+    border: 2px solid #ffffff !important; 
+    box-shadow: 0 0 10px #ffcc00 !important;
+}
+
+/* Los enlaces reciben un borde o fondo extra para identificarlos al pasar el cursor */
+body.cursor-especial-activo a:hover, 
+body.cursor-especial-activo button:hover,
+body.cursor-especial-activo input[type="submit"]:hover {
+    outline: 4px dashed #ff5722 !important; 
+    outline-offset: 4px;
+    transform: scale(1.03); 
+    transition: transform 0.1s ease;
+}
+

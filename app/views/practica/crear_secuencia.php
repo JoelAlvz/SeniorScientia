@@ -2,7 +2,7 @@
     <h2>Diseñar Nueva Secuencia de Aprendizaje</h2>
     <p>Crea un camino personalizado para tus alumnos.</p>
 
-    <form action="<?= base_url('practica/guardar-secuencia') ?>" method="POST">
+    <form action="<?= base_url('practica/guardar-secuencia') ?>" method="POST" enctype="multipart/form-data">
         <div style="background: #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
             <label>Título de la Actividad:</label><br>
             <input type="text" name="titulo" placeholder="Ej: Aprendiendo a usar el correo" style="width: 100%; padding: 10px; font-size: 1.2rem;">
@@ -12,6 +12,12 @@
             <span style="background: #007bff; color: white; padding: 5px 10px; border-radius: 5px;">PASO 1: Tu Explicación</span>
             <p>Escribe aquí lo que el alumno leerá antes de empezar.</p>
             <textarea name="paso1_texto" rows="5" style="width: 100%;" placeholder="Hola Paco, hoy vamos a practicar..."></textarea>
+            
+            <div style="margin-top: 15px; border: 2px dashed #007bff; padding: 15px; background: white; border-radius: 10px;">
+            <label><strong>📷 Añadir una imagen de apoyo:</strong></label><br>
+            <input type="file" name="explicacion_imagen" accept="image/*" style="margin-top: 10px;">
+            <p style="font-size: 0.8rem; color: #666;">(Opcional: puedes subir una foto del ratón, teclado, etc.)</p>
+        </div>
         </div>
 
         <div style="border: 2px solid #28a745; padding: 20px; border-radius: 10px; margin-bottom: 20px;">

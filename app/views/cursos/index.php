@@ -1,4 +1,6 @@
 <!-- app/views/cursos/index.php -->
+<link rel="stylesheet" href="<?= base_url('css/accesibilidad.css') ?>">
+
 <div class="contenedor-cursos" style="max-width: 800px; margin: 0 auto; padding: 20px;">
     <h2 style="font-size: 2rem; text-align: center; color: #333;">Mi Camino de Aprendizaje</h2>
     <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 40px;">
@@ -7,7 +9,7 @@
 
     <!-- FASE 1 -->
     <div class="fase-bloque" style="margin-bottom: 50px;">
-        <h3 style="background: #ffc107; padding: 15px; border-radius: 10px; display: inline-block;">Fase 1: El Despertar Digital</h3>
+        <h3 style="background: #0f0f0e; padding: 15px; border-radius: 10px; display: inline-block;">Fase 1: El Despertar Digital</h3>
         
         <div class="lista-lecciones" style="margin-top: 20px;">
             
@@ -39,3 +41,5 @@
         </div>
     </div>
 </div>
+
+<script src="<?= base_url('js/accesibilidad.js') ?>"></script>

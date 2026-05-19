@@ -6,37 +6,64 @@ class ActividadController extends Controller {
 
     public function ver($id_actividad) {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        $id_usuario = $_SESSION['user_id'];
+
+
+
+        if (!isset($_SESSION['user_id'])) {
+                header('Location: ' . base_url('login'));
+                exit;
+        }
         $db = Database::connect();
 
-        // 1. Mirar en qué paso va el alumno
+        if ($_SESSION['user_tipo'] === 'alumno') {
+            $stmt = $db->prepare("
+                SELECT COUNT(*) 
+                FROM actividades_personalizadas a
+                JOIN usuarios u ON u.tutor_id = a.tutor_id
+                WHERE a.id_actividad = ? AND u.id_usuario = ?
+            ");
+            $stmt->execute([$id_actividad, $_SESSION['user_id']]);
+            $pertenece = $stmt->fetchColumn();
+
+            if (!$pertenece) {
+                $_SESSION['flash_error'] = "⚠️ No tienes permiso para acceder a esa lección.";
+                header('Location: ' . base_url('dashboard'));
+                exit;
+            }
+        }
+
         $stmt = $db->prepare("SELECT ultimo_paso_completado FROM progreso_pasos WHERE id_usuario = ? AND id_actividad = ?");
-        $stmt->execute([$id_usuario, $id_actividad]);
+        $stmt->execute([$_SESSION['user_id'], $id_actividad]);
         $progreso = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Si es la primera vez que entra, creamos el registro de progreso
         if (!$progreso) {
             $stmt = $db->prepare("INSERT INTO progreso_pasos (id_usuario, id_actividad, ultimo_paso_completado) VALUES (?, ?, 0)");
-            $stmt->execute([$id_usuario, $id_actividad]);
+            $stmt->execute([$_SESSION['user_id'], $id_actividad]);
             $paso_actual_orden = 1;
         } else {
             $paso_actual_orden = $progreso['ultimo_paso_completado'] + 1;
         }
 
-        // 2. Traer los datos del paso que le toca
         $stmt = $db->prepare("SELECT * FROM actividad_pasos WHERE id_actividad = ? AND orden = ?");
         $stmt->execute([$id_actividad, $paso_actual_orden]);
         $paso = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Si no hay más pasos, la actividad ha terminado
         if (!$paso) {
-            $stmt = $db->prepare("UPDATE progreso_pasos SET completada = 1 WHERE id_usuario = ? AND id_actividad = ?");
-            $stmt->execute([$id_usuario, $id_actividad]);
+            $stmt = $db->prepare("UPDATE progreso_pasos SET completada = 1, fecha_actualizacion = NOW() WHERE id_usuario = ? AND id_actividad = ?");
+            $stmt->execute([$_SESSION['user_id'], $id_actividad]);
+
+            $check = $db->prepare("SELECT id_logro FROM logros_alumnos WHERE id_usuario = ? AND id_actividad = ?");
+            $check->execute([$_SESSION['user_id'], $id_actividad]);
+            
+            if (!$check->fetch()) {
+                $ins = $db->prepare("INSERT INTO logros_alumnos (id_usuario, id_actividad) VALUES (?, ?)");
+                $ins->execute([$_SESSION['user_id'], $id_actividad]);
+            }
+
             $this->view('actividades/finalizado', ['id_actividad' => $id_actividad]);
             return;
         }
 
-        // 3. Si el paso es un juego, necesitamos saber qué juego es
         $juego = null;
         if ($paso['tipo'] === 'juego') {
             $stmt = $db->prepare("SELECT * FROM juegos WHERE id_juego = ?");
@@ -44,25 +71,6 @@ class ActividadController extends Controller {
             $juego = $stmt->fetch(PDO::FETCH_ASSOC);
         }
         
-        if (!$paso) {
-            $db = Database::connect();
-            
-            // 1. Marcamos la actividad como completada (esto ya lo teníamos)
-            $stmt = $db->prepare("UPDATE progreso_pasos SET completada = 1 WHERE id_usuario = ? AND id_actividad = ?");
-            $stmt->execute([$id_usuario, $id_actividad]);
-
-            // 2. NUEVO: Registramos el logro si no lo tenía ya
-            $check = $db->prepare("SELECT id_logro FROM logros_alumnos WHERE id_usuario = ? AND id_actividad = ?");
-            $check->execute([$id_usuario, $id_actividad]);
-            
-            if (!$check->fetch()) {
-                $ins = $db->prepare("INSERT INTO logros_alumnos (id_usuario, id_actividad) VALUES (?, ?)");
-                $ins->execute([$id_usuario, $id_actividad]);
-            }
-
-            $this->view('actividades/finalizado', ['id_actividad' => $id_actividad]);
-            return;
-        }
         $this->view('actividades/visor', [
             'paso' => $paso,
             'juego' => $juego,
@@ -74,10 +82,11 @@ class ActividadController extends Controller {
         if (session_status() === PHP_SESSION_NONE) session_start();
         $db = Database::connect();
         
-        // Sumamos 1 al progreso del alumno
-        $stmt = $db->prepare("UPDATE progreso_pasos SET ultimo_paso_completado = ultimo_paso_completado + 1 WHERE id_usuario = ? AND id_actividad = ?");
+        // Sumamos 1 al progreso del alumno y actualizamos la fecha de su último avance
+        $stmt = $db->prepare("UPDATE progreso_pasos SET ultimo_paso_completado = ultimo_paso_completado + 1, fecha_actualizacion = NOW() WHERE id_usuario = ? AND id_actividad = ?");
         $stmt->execute([$_SESSION['user_id'], $id_actividad]);
 
         header('Location: ' . base_url('actividad/ver/' . $id_actividad));
+        exit;
     }
 }

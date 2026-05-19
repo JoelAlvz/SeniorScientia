@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?= base_url('css/accesibilidad.css') ?>">
 <div style="text-align: center; padding: 20px; font-family: sans-serif;">
     <h2>¡Vamos a practicar con el ratón!</h2>
     <p style="font-size: 1.5rem;">Intenta tocar el <strong>círculo azul</strong> con la flecha de tu ratón.</p>
@@ -100,3 +101,5 @@
     objetivo.addEventListener('mouseover', moverObjetivo);
     objetivo.addEventListener('click', moverObjetivo);
 </script>
+
+<script src="<?= base_url('js/accesibilidad.js') ?>"></script>

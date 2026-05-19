@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?= base_url('css/accesibilidad.css') ?>">
 <h2 style="text-align: center; font-size: 2.5rem;">Zona de Juegos y Práctica</h2>
 
 <div class="contenedor-practicas" style="padding: 20px;">
@@ -25,3 +26,4 @@
         <?php endif; ?>
     <?php endforeach; ?>
 </div>
+<script src="<?= base_url('js/accesibilidad.js') ?>"></script>

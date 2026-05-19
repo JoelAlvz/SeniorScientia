@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="<?= base_url('css/accesibilidad.css') ?>">
+
 <div style="max-width: 600px; margin: 50px auto; text-align: center; padding: 40px; background: white; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
     
     <div style="font-size: 80px; margin-bottom: 20px;">🎉</div>
@@ -19,3 +21,5 @@
        VOLVER AL INICIO
     </a>
 </div>
+
+<script src="<?= base_url('js/accesibilidad.js') ?>"></script>

@@ -37,7 +37,7 @@ class PracticaController extends Controller {
     }
     
     public function create() {
-    $this->view('practica/create');
+        $this->view('practica/create');
     }
 
     public function store() {
@@ -49,7 +49,7 @@ class PracticaController extends Controller {
                 $_POST['descripcion'],
                 $_POST['categoria'],
                 $_POST['ruta_url'],
-                $_SESSION['user_id'] // Guardamos quién lo creó
+                $_SESSION['user_id']
             ]);
             
             header('Location: ' . base_url('practica'));
@@ -60,25 +60,21 @@ class PracticaController extends Controller {
     public function crearSecuencia() {
         if (session_status() === PHP_SESSION_NONE) session_start();
         
-        // Seguridad
         if ($_SESSION['user_tipo'] !== 'tutor') {
             header('Location: ' . base_url('dashboard'));
             exit;
         }
 
         $db = Database::connect();
-        // Traemos los juegos base que tienes en la tabla 'juegos'
         $stmt = $db->query("SELECT id_juego, titulo FROM juegos");
         $juegos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Cargamos la vista pasándole los juegos
         $this->view('practica/crear_secuencia', ['juegosDisponibles' => $juegos]);
     }
 
     public function guardarSecuencia() {
         if (session_status() === PHP_SESSION_NONE) session_start();
         
-        // 1. Seguridad: Solo tutores
         if ($_SESSION['user_tipo'] !== 'tutor') {
             header('Location: ' . base_url('dashboard'));
             exit;
@@ -87,10 +83,8 @@ class PracticaController extends Controller {
         $db = Database::connect();
 
         try {
-            // Iniciamos una transacción para asegurar que se guarda todo o nada
             $db->beginTransaction();
 
-            // 2. Insertar la cabecera de la actividad
             $stmt = $db->prepare("INSERT INTO actividades_personalizadas (tutor_id, titulo, descripcion_general) VALUES (?, ?, ?)");
             $stmt->execute([
                 $_SESSION['user_id'],
@@ -100,12 +94,35 @@ class PracticaController extends Controller {
 
             $idActividad = $db->lastInsertId();
 
-            // 3. Insertar PASO 1: Explicación
-            $stmtPaso = $db->prepare("INSERT INTO actividad_pasos (id_actividad, orden, tipo, contenido) VALUES (?, ?, ?, ?)");
-            $stmtPaso->execute([$idActividad, 1, 'explicacion', $_POST['paso1_texto']]);
+            $nombreImagen = null;
+            if (isset($_FILES['explicacion_imagen']) && $_FILES['explicacion_imagen']['error'] === 0) {
+                $extension = pathinfo($_FILES['explicacion_imagen']['name'], PATHINFO_EXTENSION);
+                
+                // Le damos un nombre único para evitar que imágenes distintas colisionen
+                $nombreImagen = "guia_" . time() . "_" . uniqid() . "." . $extension;
+                
+                // Definimos la ruta hacia tu directorio público de uploads
+                $directorioDestino = __DIR__ . "/../../public/uploads/";
+                $rutaCompleta = $directorioDestino . $nombreImagen;
+                
+                // Si la carpeta de subidas no existe en tu estructura de XAMPP, la creamos de forma automática
+                if (!is_dir($directorioDestino)) {
+                    mkdir($directorioDestino, 0777, true);
+                }
+                
+                // Movemos el archivo temporal al destino real
+                move_uploaded_file($_FILES['explicacion_imagen']['tmp_name'], $rutaCompleta);
+            }
 
-            // 4. Insertar PASO 2: Juego
-            // Usamos el id_juego_referencia y los puntos necesarios
+            $stmtPaso1 = $db->prepare("INSERT INTO actividad_pasos (id_actividad, orden, tipo, contenido, imagen_guia) VALUES (?, ?, ?, ?, ?)");
+            $stmtPaso1->execute([
+                $idActividad, 
+                1, 
+                'explicacion', 
+                $_POST['paso1_texto'], 
+                $nombreImagen
+            ]);
+
             $stmtPasoJuego = $db->prepare("INSERT INTO actividad_pasos (id_actividad, orden, tipo, id_juego_referencia, puntos_necesarios) VALUES (?, ?, ?, ?, ?)");
             $stmtPasoJuego->execute([
                 $idActividad, 
@@ -115,16 +132,20 @@ class PracticaController extends Controller {
                 $_POST['paso2_meta']
             ]);
 
-            // 5. Insertar PASO 3: Conclusión o Tarea externa
-            $stmtPaso->execute([$idActividad, 3, 'externa', $_POST['paso3_texto']]);
+            $stmtPaso3 = $db->prepare("INSERT INTO actividad_pasos (id_actividad, orden, tipo, contenido) VALUES (?, ?, ?, ?)");
+            $stmtPaso3->execute([
+                $idActividad, 
+                3, 
+                'externa', 
+                $_POST['paso3_texto']
+            ]);
 
-            // Si todo ha ido bien, confirmamos los cambios
             $db->commit();
 
-            header('Location: ' . base_url('practica?success=secuencia_creada'));
+            header('Location: ' . base_url('dashboard?success=secuencia_creada'));
+            exit;
 
         } catch (Exception $e) {
-            // Si algo falla (ej: la base de datos se desconecta), deshacemos todo
             $db->rollBack();
             die("Error al guardar la secuencia: " . $e->getMessage());
         }

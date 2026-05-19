@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?= base_url('css/accesibilidad.css') ?>">
 <!-- app/views/cursos/leccion1.php -->
 <div style="max-width: 700px; margin: 0 auto; padding: 30px; font-family: sans-serif; line-height: 1.6;">
     <h2 style="color: #007bff; text-align: center; font-size: 2rem;">Paso 1: El Ratón y la Flecha</h2>
@@ -42,3 +43,5 @@
         <a href="<?= base_url('cursos') ?>" style="color: #666;">Volver atrás</a>
     </p>
 </div>
+
+<script src="<?= base_url('js/accesibilidad.js') ?>"></script>
