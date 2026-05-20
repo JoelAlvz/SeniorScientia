@@ -5,32 +5,31 @@ require_once __DIR__ . '/../core/Database.php';
 class ActividadController extends Controller {
 
     public function ver($id_actividad) {
-        if (session_status() === PHP_SESSION_NONE) session_start();
+    if (session_status() === PHP_SESSION_NONE) session_start();
 
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: ' . base_url('login'));
+        exit;
+    }
+    
+    $db = Database::connect();
 
+    if ($_SESSION['user_tipo'] === 'alumno') {
+        $stmt = $db->prepare("
+            SELECT COUNT(*) 
+            FROM actividades_personalizadas a
+            JOIN vinculaciones v ON v.tutor_id = a.tutor_id
+            WHERE a.id_actividad = ? AND v.id_alumno = ?
+        ");
+        $stmt->execute([$id_actividad, $_SESSION['user_id']]);
+        $pertenece = $stmt->fetchColumn();
 
-        if (!isset($_SESSION['user_id'])) {
-                header('Location: ' . base_url('login'));
-                exit;
+        if (!$pertenece) {
+            $_SESSION['flash_error'] = "⚠️ No tienes permiso para acceder a esa lección.";
+            header('Location: ' . base_url('dashboard'));
+            exit;
         }
-        $db = Database::connect();
-
-        if ($_SESSION['user_tipo'] === 'alumno') {
-            $stmt = $db->prepare("
-                SELECT COUNT(*) 
-                FROM actividades_personalizadas a
-                JOIN usuarios u ON u.tutor_id = a.tutor_id
-                WHERE a.id_actividad = ? AND u.id_usuario = ?
-            ");
-            $stmt->execute([$id_actividad, $_SESSION['user_id']]);
-            $pertenece = $stmt->fetchColumn();
-
-            if (!$pertenece) {
-                $_SESSION['flash_error'] = "⚠️ No tienes permiso para acceder a esa lección.";
-                header('Location: ' . base_url('dashboard'));
-                exit;
-            }
-        }
+    }
 
         $stmt = $db->prepare("SELECT ultimo_paso_completado FROM progreso_pasos WHERE id_usuario = ? AND id_actividad = ?");
         $stmt->execute([$_SESSION['user_id'], $id_actividad]);

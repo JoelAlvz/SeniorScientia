@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     const btnAcc = document.getElementById('btn-accesibilidad');
     const menuAcc = document.getElementById('menu-accesibilidad');
@@ -9,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
             menuAcc.style.display = (menuAcc.style.display === 'none' || menuAcc.style.display === '') ? 'block' : 'none';
         });
 
-        // Cerrar el menú si el usuario hace clic fuera de él
         document.addEventListener('click', (e) => {
             if (!menuAcc.contains(e.target) && e.target !== btnAcc) {
                 menuAcc.style.display = 'none';
@@ -17,42 +15,46 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Recuperar y aplicar la configuración guardada del alumno al cargar la página
+    //Recuperar y aplicar configuraciones desde LocalStorage
     const textoGuardado = localStorage.getItem('accesibilidad-texto');
-    if (textoGuardado) {
-        aplicarNivelTexto(textoGuardado);
-    }
+    if (textoGuardado) aplicarNivelTexto(textoGuardado);
     
-    const contrasteGuardado = localStorage.getItem('accesibilidad-contraste');
-    if (contrasteGuardado === 'activo') {
-        document.body.classList.add('alto-contraste');
-    }
+    const contrasteGuardado = localStorage.getItem('accesibilidad-contrast');
+    if (contrasteGuardado === 'activo') document.body.classList.add('alto-contrast');
 
     // ==================================================================
-    // MOTOR DEL CURSOR ESPECIAL RESALTADO
+    // MOTOR DEL CURSOR ESPECIAL RESALTADO (CORREGIDO)
     // ==================================================================
-    
-    // Crear e inyectar el círculo dinámicamente al cargar la página si no existe
     let circle = document.createElement('div');
     circle.id = 'custom-cursor-circle';
     circle.className = 'custom-cursor-circle';
+    
+    circle.style.position = 'fixed';
+    circle.style.left = '-100px';
+    circle.style.top = '-100px';
+    circle.style.visibility = 'hidden'; 
+    circle.style.opacity = '0'; 
 
     let centerDot = document.createElement('div');
     centerDot.className = 'custom-cursor-dot';
     circle.appendChild(centerDot);
-    
     document.body.appendChild(circle);
 
-    // Escuchar el movimiento del ratón para seguir las coordenadas con aceleración gráfica
     document.addEventListener('mousemove', (e) => {
-
         const x = e.clientX - 20;
         const y = e.clientY - 20;
         
-        // Aplicamos la transformación 3D para máxima fluidez
-        circle.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        circle.style.left = x + 'px';
+        circle.style.top = y + 'px';
 
-        // Comprobamos si el ratón está pasando por encima de un elemento clickeable
+        if (document.body.classList.contains('cursor-especial-activo')) {
+            circle.style.visibility = 'visible';
+            circle.style.opacity = '1';
+        } else {
+            circle.style.visibility = 'hidden';
+            circle.style.opacity = '0';
+        }
+
         const target = e.target;
         if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a') || target.closest('button') || target.type === 'submit') {
             circle.classList.add('on-link');
@@ -60,9 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
             circle.classList.remove('on-link');
         }
     });
-    // Efecto de "punto/explosión" al hacer click
+
     document.addEventListener('click', (e) => {
-        // Solo si la función está activada
         if (document.body.classList.contains('cursor-especial-activo')) {
             let clickDot = document.createElement('div');
             clickDot.className = 'cursor-click-effect';
@@ -70,24 +71,27 @@ document.addEventListener("DOMContentLoaded", () => {
             clickDot.style.top = e.clientY + 'px';
             document.body.appendChild(clickDot);
 
-            // Eliminar el elemento una vez termine la animación CSS (400ms)
-            setTimeout(() => {
-                clickDot.remove();
-            }, 400);
+            setTimeout(() => { clickDot.remove(); }, 400);
         }
     });
 
-    // Cargar estado inicial del cursor desde LocalStorage
     const cursorGuardado = localStorage.getItem('accesibilidad-cursor');
     if (cursorGuardado === 'activo') {
         document.body.classList.add('cursor-especial-activo');
-        circle.style.display = 'block';
         actualizarBotonCursor(true);
+    }
+
+    // Cargar estado guardado persistente del asistente de voz
+    const vozGuardada = localStorage.getItem('accesibilidad-voz');
+    if (vozGuardada === 'activo') {
+        document.body.classList.add('voz-asistida-activa');
+        actualizarBotonVoz(true);
+        activarEscuchadoresVoz();
     }
 });
 
 // ==================================================================
-// FUNCIONES GLOBALES (ACCESIBLES DESDE EL ONCLICK DEL HTML)
+// CONFIGURACIONES INTERACTIVAS GLOBALES
 // ==================================================================
 
 function cambiarTexto(nivel) {
@@ -97,20 +101,13 @@ function cambiarTexto(nivel) {
 
 function aplicarNivelTexto(nivel) {
     document.body.classList.remove('texto-grande', 'texto-gigante');
-    if (nivel === 'grande') {
-        document.body.classList.add('texto-grande');
-    } else if (nivel === 'gigante') {
-        document.body.classList.add('texto-gigante');
-    }
+    if (nivel === 'grande') document.body.classList.add('texto-grande');
+    if (nivel === 'gigante') document.body.classList.add('texto-gigante');
 }
 
 function alternarContraste() {
     document.body.classList.toggle('alto-contraste');
-    if (document.body.classList.contains('alto-contraste')) {
-        localStorage.setItem('accesibilidad-contraste', 'activo');
-    } else {
-        localStorage.setItem('accesibilidad-contraste', 'inactivo');
-    }
+    localStorage.setItem('accesibilidad-contraste', document.body.classList.contains('alto-contraste') ? 'activo' : 'inactivo');
 }
 
 function alternarCursorEspecial() {
@@ -118,11 +115,13 @@ function alternarCursorEspecial() {
     const activo = document.body.classList.toggle('cursor-especial-activo');
     
     if (activo) {
-        if (circle) circle.style.display = 'block';
         localStorage.setItem('accesibilidad-cursor', 'activo');
         actualizarBotonCursor(true);
     } else {
-        if (circle) circle.style.display = 'none';
+        if (circle) {
+            circle.style.visibility = 'hidden';
+            circle.style.opacity = '0';
+        }
         localStorage.setItem('accesibilidad-cursor', 'inactivo');
         actualizarBotonCursor(false);
     }
@@ -141,4 +140,79 @@ function actualizarBotonCursor(isActivo) {
             btn.innerHTML = '🎯 Resaltar Ratón';
         }
     }
+}
+
+// ==================================================================
+// ASISTENTE REPRODUCTOR DE VOZ (TEXT-TO-SPEECH)
+// ==================================================================
+
+function alternarVozAsistida() {
+    const activo = document.body.classList.toggle('voz-asistida-activa');
+    
+    if (activo) {
+        localStorage.setItem('accesibilidad-voz', 'activo');
+        actualizarBotonVoz(true);
+        activarEscuchadoresVoz();
+        hablarTexto("Asistencia por voz activada");
+    } else {
+        localStorage.setItem('accesibilidad-voz', 'inactivo');
+        actualizarBotonVoz(false);
+        window.speechSynthesis.cancel();
+    }
+}
+
+function actualizarBotonVoz(isActivo) {
+    const btn = document.getElementById('btn-voz');
+    if (btn) {
+        if (isActivo) {
+            btn.style.background = '#28a745';
+            btn.style.color = '#fff';
+            btn.innerHTML = '✅ Voz Activa';
+        } else {
+            btn.style.background = '#6f42c1';
+            btn.style.color = '#fff';
+            btn.innerHTML = '🔊 Activar Voz';
+        }
+    }
+}
+
+function hablarTexto(texto) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const textoLimpio = texto.replace(/[👋🎉🎯🌓👁️🥇✉️🔊✅]/g, '').trim();
+        if (textoLimpio.length === 0) return;
+
+        const utterance = new SpeechSynthesisUtterance(textoLimpio);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.85; 
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+function activarEscuchadoresVoz() {
+    const elementosLegibles = document.querySelectorAll('h1, h2, h3, h4, a, button, .card p, strong, label');
+
+    elementosLegibles.forEach(elemento => {
+        if (!elemento.dataset.vozAsignada) {
+            elemento.dataset.vozAsignada = "true";
+
+            elemento.addEventListener('mouseover', (e) => {
+                if (document.body.classList.contains('voz-asistida-activa')) {
+                    e.stopPropagation(); 
+                    let textoALeer = elemento.innerText || elemento.textContent;
+                    
+                    if (elemento.tagName === 'A' || elemento.tagName === 'BUTTON' || elemento.classList.contains('btn-grande')) {
+                        textoALeer = "Botón: " + textoALeer;
+                    }
+                    hablarTexto(textoALeer);
+                }
+            });
+
+            elemento.addEventListener('mouseleave', () => {
+                if (document.body.classList.contains('voz-asistida-activa')) {
+                    window.speechSynthesis.cancel();
+                }
+            });
+        }
+    });
 }

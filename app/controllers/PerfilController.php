@@ -13,33 +13,47 @@ class PerfilController extends Controller {
     }
 
     public function vincularTutor() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $idTutor = $_POST['codigo_tutor'];
+            $idTutor = trim($_POST['codigo_tutor']);
             $idAlumno = $_SESSION['user_id'];
 
             $db = Database::connect();
             
-            // 1. Verificamos que el ID introducido sea realmente un 'tutor'
             $check = $db->prepare("SELECT tipo FROM usuarios WHERE id_usuario = ?");
             $check->execute([$idTutor]);
             $user = $check->fetch();
 
-            if ($user && $user['tipo'] === 'tutor') {
-                // 2. ACTUALIZACIÓN CLAVE: Guardamos el ID del tutor en la ficha del alumno
-                $stmt = $db->prepare("UPDATE usuarios SET tutor_id = ? WHERE id_usuario = ?");
-                $stmt->execute([$idTutor, $idAlumno]);
-
-
-                $stmt2 = $db->prepare("INSERT INTO vinculaciones (tutor_id, id_alumno) VALUES (?, ?) 
-                                    ON DUPLICATE KEY UPDATE tutor_id = ?");
-                $stmt2->execute([$idTutor, $idAlumno, $idTutor]);
-                
-                
-                header('Location: ' . base_url('dashboard?success=vinculado'));
-            } else {
-                header('Location: ' . base_url('dashboard?error=codigo_invalido'));
+        if ($user && $user['tipo'] === 'tutor') {
+            
+            $stmtCheckVinc = $db->prepare("SELECT id_vinculacion FROM vinculaciones WHERE tutor_id = ? AND id_alumno = ?");
+            $stmtCheckVinc->execute([$idTutor, $idAlumno]);
+            if ($stmtCheckVinc->fetch()) {
+                $_SESSION['flash_vinculacion'] = ['tipo' => 'error', 'msg' => "Ya estás conectado con este tutor."];
+                header('Location: ' . base_url('dashboard'));
+                exit;
             }
-            exit;
+
+            $stmtCheckSol = $db->prepare("SELECT id_solicitud FROM solicitudes_vinculacion WHERE id_tutor = ? AND id_alumno = ? AND estado = 'pendiente'");
+            $stmtCheckSol->execute([$idTutor, $idAlumno]);
+            if ($stmtCheckSol->fetch()) {
+                $_SESSION['flash_vinculacion'] = ['tipo' => 'aviso', 'msg' => " Ya tienes una solicitud pendiente con este tutor. Espera a que la acepte."];
+                header('Location: ' . base_url('dashboard'));
+                exit;
+            }
+
+            $stmtIns = $db->prepare("INSERT INTO solicitudes_vinculacion (id_tutor, id_alumno, estado) VALUES (?, ?, 'pendiente')");
+            $stmtIns->execute([$idTutor, $idAlumno]);
+
+            $_SESSION['flash_vinculacion'] = ['tipo' => 'exito', 'msg' => "¡Solicitud enviada! Espera a que tu tutor la apruebe."];
+            header('Location: ' . base_url('dashboard'));
+
+        } else {
+            $_SESSION['flash_vinculacion'] = ['tipo' => 'error', 'msg' => "El código de tutor introducido no es válido."];
+            header('Location: ' . base_url('dashboard'));
+        }
+        exit;
         }
     }
 }
