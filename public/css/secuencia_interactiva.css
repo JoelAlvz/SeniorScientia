@@ -1,0 +1,250 @@
+/* ==========================================================================
+   Estilos exclusivos para la vista ver_secuencia.php
+   ========================================================================== */
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.01); }
+    100% { transform: scale(1); }
+}
+
+.secuencia-completada-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 30px;
+    text-align: center;
+    font-family: sans-serif;
+    background: #f0fdf4;
+    border: 3px solid #16a34a;
+    border-radius: 16px;
+    box-sizing: border-box;
+}
+
+.secuencia-completada-container h1 {
+    color: #14532d;
+    font-size: 2.2rem;
+    margin-top: 10px;
+}
+
+.secuencia-completada-container p {
+    color: #166534;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+}
+
+.secuencia-completada-container .btn-volver-panel {
+    display: inline-block;
+    background: #16a34a;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(22, 163, 74, 0.2);
+}
+
+.secuencia-layout-main {
+    width: 100%;
+    max-width: 1350px;
+    margin: 0 auto;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 85vh;
+    justify-content: space-between;
+}
+
+#secuencia-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: #f1f5f9;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+}
+
+#secuencia-cabecera .ruta-texto {
+    color: #475569;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#secuencia-cabecera .etapa-badge {
+    background: #3b82f6;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.secuencia-contenido-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+.contenido-tipo-texto {
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: #334155;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.multimedia-instrucciones {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin: 0 0 10px 0;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.multimedia-video-container {
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.multimedia-video-container iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.multimedia-imagen-container {
+    text-align: center;
+    max-height: 50vh;
+    overflow: hidden;
+}
+
+.multimedia-imagen-container img {
+    max-width: 100%;
+    max-height: 50vh;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 2px solid #cbd5e1;
+}
+
+.juego-flex-container {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+}
+
+.juego-objetivo-barra {
+    margin-bottom: 8px;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.juego-objetivo-barra .txt-label {
+    font-size: 1.1rem;
+    color: #475569;
+}
+
+.juego-objetivo-barra .txt-meta {
+    font-size: 1.25rem;
+    color: #16a34a;
+    margin-left: 5px;
+}
+
+/* Cartel de meta completada */
+#cartel-meta-exito {
+    display: none;
+    width: 100%;
+    max-width: 1350px;
+    background: #dcfce7;
+    border: 2px dashed #22c55e;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#cartel-meta-exito h4 {
+    color: #14532d;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+#cartel-meta-exito p {
+    color: #166534;
+    font-size: 1rem;
+    margin: 2px 0 0 0;
+}
+
+/* Envoltorio del Iframe del juego */
+.juego-iframe-box {
+    width: 100%;
+    max-width: 1350px;
+    margin: 0 auto;
+    flex-grow: 1;
+    height: calc(100vh - 280px);
+    min-height: 420px;
+    background: #1e293b;
+    border: 4px solid #28a745;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+.juego-iframe-box iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
+#secuencia-botonera {
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+#btn-avanzar-secuencia {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}

@@ -1,0 +1,83 @@
+
+html, body {
+    height: 100%;
+    width: 100%;      
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.juego-raton-container {
+    width: 100%;       
+    max-width: 100%;  
+    height: 100%; 
+    text-align: center; 
+    padding: 15px; 
+    font-family: sans-serif; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    box-sizing: border-box;
+}
+
+#zona-juego {
+    width: 100%; 
+    height: calc(100vh - 170px); 
+    min-height: 350px; 
+    max-height: 100%;
+    border: 3px dashed #ccc; 
+    position: relative; 
+    background: #f9f9f9; 
+    overflow: hidden; 
+    border-radius: 20px;
+    box-sizing: border-box;
+}
+
+#objetivo {
+    width: 100px; 
+    height: 100px; 
+    background-color: #007bff; 
+    border-radius: 50%; 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+
+/* Textos y Footer */
+.instruccion-texto {
+    font-size: 1.3rem; 
+    margin: 5px 0;
+}
+
+.meta-tutor-texto {
+    color: #28a745; 
+    font-weight: bold; 
+    font-size: 1.1rem; 
+    margin: 5px 0;
+}
+
+.marcador-puntos {
+    color: green; 
+    margin: 5px 0; 
+    font-size: 1.4rem;
+}
+
+.juego-raton-footer {
+    flex-shrink: 0; 
+    margin-top: 10px;
+}
+
+.juego-raton-footer a {
+    font-size: 1.2rem; 
+    color: #666;
+}

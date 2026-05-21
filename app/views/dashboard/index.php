@@ -11,7 +11,7 @@
     
     <div class="header-izq-info">
         <h2>Panel de Control</h2>
-        <p>👋 Hola, <strong><?= htmlspecialchars($_SESSION['user_nombre']) ?></strong>. ¿Qué quieres hacer hoy?</p>
+        <p>Hola, <strong><?= htmlspecialchars($_SESSION['user_nombre']) ?></strong>. ¿Qué quieres hacer hoy?</p>
     </div>
     
     <div class="header-der">
@@ -33,7 +33,6 @@
         
         <?php 
         $db = Database::connect();
-        // Buscamos el último mensaje que el tutor asociado le haya dejado a este alumno
         $stmt = $db->prepare("
             SELECT m.*, u.nombre as nombre_tutor 
             FROM mensajes_tutores m
@@ -63,9 +62,9 @@
                 <?php 
                 $db = Database::connect();
                 $stmt = $db->prepare("
-                    SELECT a.titulo 
+                    SELECT s.titulo 
                     FROM logros_alumnos l 
-                    JOIN actividades_personalizadas a ON l.id_actividad = a.id_actividad 
+                    JOIN secuencias_aprendizaje s ON l.id_actividad = s.id_secuencia 
                     WHERE l.id_usuario = ?
                 ");
                 $stmt->execute([$_SESSION['user_id']]);
@@ -105,28 +104,26 @@
             </div>
         </div>
         
-        <div class="tareas-contenedor">
+      <div class="tareas-contenedor">
             <h3>Tareas de mi Tutor</h3>
             <?php 
             $db = Database::connect();
             $id_alumno_sesion = $_SESSION['user_id'];
             
-            // Comprobamos si el alumno tiene alguna vinculación activa
             $stmtCheck = $db->prepare('SELECT tutor_id FROM vinculaciones WHERE id_alumno = ? LIMIT 1');
             $stmtCheck->execute([$id_alumno_sesion]);
             $vinculacion = $stmtCheck->fetch(PDO::FETCH_ASSOC);
             
             $rutas = [];
             if ($vinculacion) {
-                // Traemos todas las actividades pendientes ordenadas por la más reciente primero
+               
                 $stmt = $db->prepare('
-                    SELECT a.* FROM actividades_personalizadas a 
-                    LEFT JOIN progreso_pasos p ON p.id_actividad = a.id_actividad AND p.id_usuario = ?
-                    WHERE a.tutor_id = ? 
-                      AND (p.completada IS NULL OR p.completada = 0)
-                    ORDER BY a.fecha_creacion DESC
+                    SELECT s.* FROM secuencias_aprendizaje s 
+                    WHERE s.tutor_id = ? 
+                      AND (s.id_alumno IS NULL OR s.id_alumno = ?)
+                    ORDER BY s.fecha_creacion DESC
                 ');
-                $stmt->execute([$id_alumno_sesion, $vinculacion['tutor_id']]);
+                $stmt->execute([$vinculacion['tutor_id'], $id_alumno_sesion]);
                 $rutas = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             ?>
@@ -144,29 +141,38 @@
                 ?>
 
                 <div class="tareas-grid">
-                    <div class="tarea-item-card" style="border-left-color: var(--color-exito); box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);">
+                    <div class="tarea-item-card" style="border-left-color: var(--color-exito); box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15); position: relative;">
                         <div>
-                            <span style="background: var(--color-exito); color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 5px;">NUEVA TAREA</span>
-                            <h4 style="font-size: 1.3rem; color: var(--texto-principal);"><?= htmlspecialchars($ultima_tarea['titulo']) ?></h4>
-                            <small>Asignada el: <?= date('d/m/Y', strtotime($ultima_tarea['fecha_creacion'])) ?></small>
+                            <?php if ($ultima_tarea['id_alumno'] !== null): ?>
+                                <span style="background: #007bff; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 5px;">⭐ SOLO PARA TI</span>
+                            <?php else: ?>
+                                <span style="background: var(--color-exito); color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 5px;">NUEVA TAREA</span>
+                            <?php endif; ?>
+
+                            <h4 style="font-size: 1.3rem; color: var(--texto-principal); margin: 5px 0;"><?= htmlspecialchars($ultima_tarea['titulo']) ?></h4>
+                            <small style="color: #64748b;">Área: <strong><?= strtoupper($ultima_tarea['categoria']) ?></strong> | Asignada el: <?= date('d/m/Y', strtotime($ultima_tarea['fecha_creacion'])) ?></small>
                         </div>
-                        <a href="<?= base_url('actividad/ver/' . $ultima_tarea['id_actividad']) ?>" class="btn-empezar-leccion" style="background: var(--color-exito);">
+                        
+                        <a href="<?= base_url('practica/ver-secuencia/' . $ultima_tarea['id_secuencia']) ?>" class="btn-empezar-leccion" style="background: var(--color-exito);">
                             EMPEZAR LECCIÓN
                         </a>
                     </div>
                 </div>
 
-                <details class="desplegable-tareas-historial">
-                    <summary class="summary-tareas">📁 Ver otras tareas anteriores pendientes (<?= count($otras_tareas) ?>)</summary>
+                <details class="desplegable-tareas-historial" style="margin-top: 15px;">
+                    <summary class="summary-tareas">📁 Ver otras tareas anteriores (<?= count($otras_tareas) ?>)</summary>
                     <div class="cuerpo-tareas-historial">
                         <?php if (!empty($otras_tareas)): ?>
                             <?php foreach ($otras_tareas as $ruta): ?>
-                                <div class="tarea-item-card">
+                                <div class="tarea-item-card" style="margin-bottom: 10px;">
                                     <div>
-                                        <h4><?= htmlspecialchars($ruta['titulo']) ?></h4>
+                                        <?php if ($ruta['id_alumno'] !== null): ?>
+                                            <span style="background: #007bff; color: white; padding: 1px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">⭐ PRIVADA</span>
+                                        <?php endif; ?>
+                                        <h4 style="margin: 5px 0;"><?= htmlspecialchars($ruta['titulo']) ?></h4>
                                         <small>Creado el: <?= date('d/m/Y', strtotime($ruta['fecha_creacion'])) ?></small>
                                     </div>
-                                    <a href="<?= base_url('actividad/ver/' . $ruta['id_actividad']) ?>" class="btn-empezar-leccion">
+                                    <a href="<?= base_url('practica/ver-secuencia/' . $ruta['id_secuencia']) ?>" class="btn-empezar-leccion">
                                         EMPEZAR LECCIÓN
                                     </a>
                                 </div>
