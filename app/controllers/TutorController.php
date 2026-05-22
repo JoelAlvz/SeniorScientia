@@ -17,33 +17,29 @@ class TutorController extends Controller {
         $db = Database::connect();
 
         $stmt = $db->prepare("SELECT id_usuario, nombre, email FROM usuarios WHERE id_usuario = ?");
-        $stmt->execute([$idAlumno]);
+        $stmt->execute([$idAlumno]); 
         $alumno = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $stmt = $db->prepare("
             SELECT 
-                a.titulo, 
+                s.titulo, 
                 p.ultimo_paso_completado, 
                 p.completada, 
                 p.fecha_actualizacion,
-                (SELECT COUNT(*) FROM actividad_pasos WHERE id_actividad = a.id_actividad) as total_pasos
+                (SELECT COUNT(*) FROM secuencia_pasos WHERE id_secuencia = s.id_secuencia) as total_pasos
             FROM progreso_pasos p
-            JOIN actividades_personalizadas a ON p.id_actividad = a.id_actividad
+            JOIN secuencias_aprendizaje s ON p.id_actividad = s.id_secuencia
             WHERE p.id_usuario = ?
             ORDER BY p.fecha_actualizacion DESC
         ");
-        $stmt->execute([$idAlumno]);
+        $stmt->execute([$idAlumno]); 
         $leccionesPasos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $db->prepare("SELECT * FROM progreso_actividades WHERE id_usuario = ? ORDER BY fecha DESC");
-        $stmt->execute([$idAlumno]);
-        $progresosLibres = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // 4. Enviamos todo a la vista
         $this->view('tutor/detalle_alumno', [
             'alumno' => $alumno,
             'lecciones' => $leccionesPasos, 
-            'progresos' => $progresosLibres 
+            'progresos' => [] 
         ]);
     }
 

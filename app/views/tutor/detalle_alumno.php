@@ -59,43 +59,4 @@
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
-
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
-    <h3>Historial de Actividades</h3>
-
-    <?php if (empty($progresos)): ?>
-        <p style="background: #fff3cd; padding: 20px; border-radius: 10px; color: #856404;">
-            Este alumno aún no ha realizado ninguna práctica.
-        </p>
-    <?php else: ?>
-        <div style="display: grid; gap: 15px;">
-            <?php foreach ($progresos as $p): ?>
-                <?php 
-                    $extra = json_decode($p['datos_extra'], true); 
-                ?>
-                <div style="background: white; border: 1px solid #ddd; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                    <div>
-                        <span style="background: #e7f3ff; color: #007bff; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
-                            <?= str_replace('-', ' ', $p['actividad_slug']) ?>
-                        </span>
-                        <h4 style="margin: 10px 0 5px;"><?= $p['puntos'] ?> Puntos conseguidos</h4>
-                        <small style="color: #999;"><?= date('d/m/Y H:i', strtotime($p['fecha'])) ?></small>
-                    </div>
-
-                    <div style="text-align: right; min-width: 200px; border-left: 1px solid #eee; padding-left: 20px;">
-                        <p style="margin: 0; font-size: 0.9rem; color: #444;"><strong>Detalles técnicos:</strong></p>
-                        <?php if ($extra): ?>
-                            <ul style="margin: 5px 0; padding: 0; list-style: none; font-size: 0.85rem; color: #666;">
-                                <?php foreach ($extra as $key => $val): ?>
-                                    <li><?= ucfirst($key) ?>: <?= $val ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php else: ?>
-                            <p style="font-size: 0.8rem; color: #bbb;">Sin datos extra</p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
 </div>
