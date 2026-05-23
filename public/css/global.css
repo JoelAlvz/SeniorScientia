@@ -160,7 +160,7 @@
     gap: 15px;
 }
 .tarea-item-card {
-background: #ffffff;
+    background: #ffffff;
     border: 1px solid var(--borde-tarjeta, #e0e0e0);
     border-left: 5px solid var(--color-primario, #007bff); /* Línea de color acentuada a la izquierda */
     border-radius: 12px;
@@ -170,8 +170,14 @@ background: #ffffff;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-    
+    gap: 20px;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+.tarea-item-card > div {
+    min-width: 0;       
+    flex: 1;            
 }
 .tarea-item-card h4 {
     margin: 0 0 5px 0;
@@ -296,7 +302,9 @@ background: #ffffff;
     text-decoration: none;
     border-radius: 5px;
 }
-
+.btn-progreso-detallado:hover{
+    background: #218838;
+}
 /* Botón flotante y Ventana de Accesibilidad */
 .btn-flotante-accesibilidad {
     position: fixed;
@@ -609,10 +617,10 @@ display: inline-block;
     background: #d0e7ff;
 }
 .cuerpo-tareas-historial {
-    padding: 20px;
-    border-top: 1px solid var(--color-primario);
-    display: grid;
-    gap: 15px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; 
+    box-sizing: border-box;
 }
 .texto-desplegable-vacio {
     color: var(--texto-secundario);
@@ -702,14 +710,14 @@ display: inline-block;
 }
 
 .item-historial-card {
-    margin-bottom: 15px;
-    padding: 15px;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 .badge-tarea-privada {
     background: #007bff;
@@ -723,7 +731,11 @@ display: inline-block;
 }
 .titulo-tarea-historial {
     margin: 5px 0;
-    font-size: 1.1rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; 
+    overflow: hidden;
+    word-break: break-word;
 }
 .fecha-tarea-historial {
     color: #64748b;
@@ -801,4 +813,194 @@ body {
 .tareas-contenedor > h3::before {
     content: "📋";
     font-size: 1.5rem;
+}
+/* ===================================
+   PANEL DE CONTROL DEL TUTOR
+   =================================== */
+
+.grid-tutor-layout {
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto 40px auto !important;
+}
+
+.card-tutor-gris {
+    border: 2px solid #cccccc !important;
+    background: #ffffff;
+    box-shadow: var(--sombra-premium);
+}
+
+.tutor-controles-lista {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.buscador-wrapper {
+    flex: 1;
+    min-width: 260px;
+}
+
+#buscar-alumno-input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 2px solid var(--borde-suave, #e2e8f0);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#buscar-alumno-input:focus {
+    border-color: var(--color-primario, #007bff);
+}
+
+.botones-orden-wrapper {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-orden-filtro {
+    background: #ffffff;
+    color: var(--texto-principal, #333333);
+    border: 2px solid var(--borde-suave, #e2e8f0);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-orden-filtro:hover {
+    border-color: var(--color-primario, #007bff);
+    color: var(--color-primario, #007bff);
+}
+
+.paginacion-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 25px;
+}
+
+.btn-pagina-num {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: var(--texto-principal);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.btn-pagina-num:hover {
+    border-color: var(--color-primario);
+    color: var(--color-primario);
+}
+
+.btn-pagina-num.pagina-activa {
+    background: var(--color-primario);
+    color: white;
+    border-color: var(--color-primario);
+}
+
+.texto-vacio-alumnos {
+    color: var(--texto-secundario);
+    font-style: italic;
+    margin-top: 10px;
+}
+
+@media (max-width: 540px) {
+    .alumno-tutor-li {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+    .btn-progreso-detallado {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+
+.dashboard-tutor-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.tutor-centro-pantalla {
+    width: 100%;
+    display: block;
+}
+
+.tutor-centro-pantalla .grid-aprendizaje {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 0 auto !important;
+}
+
+.tutor-centro-pantalla .grid-aprendizaje .card.alumno {
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.tutor-alumnos-box-container {
+    width: 100%;
+}
+
+.tutor-alumnos-box {
+    width: 100%;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+@media (min-width: 1400px) {
+    .dashboard-tutor-wrapper {
+        max-width: 1600px;
+        display: grid;
+        grid-template-columns: 28% 68%;
+        gap: 4%; 
+        align-items: center;
+        padding: 40px 20px;
+    }
+
+    .tutor-centro-pantalla {
+        height: auto;
+    }
+
+    .tutor-centro-pantalla .grid-aprendizaje {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 25px; 
+    }
+
+    .tutor-centro-pantalla .grid-aprendizaje .card.alumno {
+        flex: none;
+        width: 100%;
+        min-height: 230px; 
+    }
+
+    .tutor-alumnos-box-container {
+        height: auto;
+    }
 }

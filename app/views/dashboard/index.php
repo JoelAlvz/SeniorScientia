@@ -245,54 +245,73 @@
             <button id="btn-voz" onclick="alternarVozAsistida()" class="btn-panel-voz">🔊 Activar Voz</button>
         </div>
 
-
     <?php elseif ($_SESSION['user_tipo'] === 'tutor'): ?>
         
-        <div class="grid-aprendizaje">
-            <div class="card tutor">
-                <h3>Gestión de Alumnos</h3>
-                <p>Mira cómo van tus alumnos y ayúdales.</p>
-                <a href="<?= base_url('admin/alumnos') ?>" class="btn-grande-premium">VER MIS ALUMNOS</a>
-            </div>
-
-            <div class="card tutor">
-                <h3>Crear Contenido</h3>
-                <p>Diseña lecciones personalizadas con explicaciones y juegos.</p>
-                <a href="<?= base_url('practica/crear-secuencia') ?>" class="btn-grande-premium">CREAR LECCIÓN POR PASOS</a>
-            </div>
-        </div>
-
-        <div class="tutor-alumnos-box">
-            <h3>Mis Alumnos Conectados:</h3>
-            <p>Tu código para que los alumnos te agreguen es: <strong class="tutor-codigo-resaltado"><?= $_SESSION['user_id'] ?></strong></p>
+        <div class="dashboard-tutor-wrapper">
             
-            <?php 
-            $db = Database::connect();
-            $stmtMisAlumnos = $db->prepare("
-                SELECT u.id_usuario, u.nombre 
-                FROM vinculaciones v
-                JOIN usuarios u ON v.id_alumno = u.id_usuario
-                WHERE v.tutor_id = ?
-                ORDER BY u.nombre ASC
-            ");
-            $stmtMisAlumnos->execute([$_SESSION['user_id']]);
-            $misAlumnosActivos = $stmtMisAlumnos->fetchAll(PDO::FETCH_ASSOC);
-            ?>
+            <div class="tutor-centro-pantalla">
+                <div class="grid-aprendizaje">
+                    <div class="card alumno">
+                        <div>
+                            <h3>Gestión de Alumnos</h3>
+                            <p>Mira cómo van tus alumnos y ayúdales.</p>
+                        </div>
+                        <a href="<?= base_url('admin/alumnos') ?>" class="btn-grande-premium">VER MIS ALUMNOS</a>
+                    </div>
 
-            <?php if (!empty($misAlumnosActivos)): ?>
-                <ul class="lista-alumnos-tutor">
-                <?php foreach($misAlumnosActivos as $alumno): ?>
-                    <li class="alumno-tutor-li">
-                        <strong><?= htmlspecialchars($alumno['nombre']) ?></strong>
-                        <a href="<?= base_url('tutor/alumno/'.$alumno['id_usuario']) ?>" class="btn-progreso-detallado">Ver Progreso Detallado</a>
-                    </li>
-                <?php endforeach; ?>
-                </ul>
-            <?php else: ?>
-                <p>Todavía no tienes alumnos conectados. Dales tu código para empezar.</p>
-            <?php endif; ?>
-        </div>
+                    <div class="card alumno">
+                        <div>
+                            <h3>Crear Contenido</h3>
+                            <p>Diseña lecciones personalizadas con explicaciones y juegos.</p>
+                        </div>
+                        <a href="<?= base_url('practica/crear-secuencia') ?>" class="btn-grande-premium">CREAR LECCIÓN POR PASOS</a>
+                    </div>
+                </div>
+            </div>
 
+            <div class="tutor-alumnos-box-container">
+                <div class="tutor-alumnos-box">
+                    <h3>Mis Alumnos Conectados:</h3>
+                    <p>Tu código para que los alumnos te agreguen es: <strong class="tutor-codigo-resaltado"><?= $_SESSION['user_id'] ?></strong></p>
+                    
+                    <?php 
+                    $db = Database::connect();
+                    $stmtMisAlumnos = $db->prepare("
+                        SELECT u.id_usuario, u.nombre 
+                        FROM vinculaciones v
+                        JOIN usuarios u ON v.id_alumno = u.id_usuario
+                        WHERE v.tutor_id = ?
+                        ORDER BY u.nombre ASC
+                    ");
+                    $stmtMisAlumnos->execute([$_SESSION['user_id']]);
+                    $misAlumnosActivos = $stmtMisAlumnos->fetchAll(PDO::FETCH_ASSOC);
+                    ?>
+
+                    <?php if (!empty($misAlumnosActivos)): ?>
+                        <div class="tutor-controles-lista">
+                            <div class="buscador-wrapper">
+                                <input type="text" id="buscar-alumno-input" placeholder="🔍 Buscar alumno por nombre..." oninput="filtrarYRenderizarAlumnos()">
+                            </div>
+                            <div class="botones-orden-wrapper">
+                                <button type="button" class="btn-orden-filtro" onclick="cambiarOrdenAlumnos('AZ')">🔤 A-Z</button>
+                                <button type="button" class="btn-orden-filtro" onclick="cambiarOrdenAlumnos('ZA')">🔤 Z-A</button>
+                            </div>
+                        </div>
+
+                        <ul class="lista-alumnos-tutor" id="lista-dinamica-alumnos"></ul>
+                        <div class="paginacion-wrapper" id="paginacion-alumnos-nav"></div>
+                    <?php else: ?>
+                        <p class="texto-vacio-alumnos">Todavía no tienes alumnos conectados. Dales tu código para empezar.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        </div> 
+
+        <script>
+            const arrayAlumnosInicial = <?= json_encode($misAlumnosActivos) ?>;
+            const baseUrlProgresos = "<?= base_url('tutor/alumno/') ?>";
+        </script>
 
     <?php elseif ($_SESSION['user_tipo'] === 'admin'): ?>
         <div class="card admin">

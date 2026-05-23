@@ -73,18 +73,18 @@ class TutorController extends Controller {
         
         $db = Database::connect();
         
-        // 1. Obtener la solicitud para extraer el id_tutor y el id_alumno
+        // Obtener la solicitud para extraer el id_tutor y el id_alumno
         $stmt = $db->prepare("SELECT id_tutor, id_alumno FROM solicitudes_vinculacion WHERE id_solicitud = ? AND estado = 'pendiente'");
         $stmt->execute([$id_solicitud]);
         $solicitud = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($solicitud) {
             if ($accion === 'aceptar') {
-                // A) Actualizar el estado de la solicitud a 'aceptada'
+                // Actualizar el estado de la solicitud a 'aceptada'
                 $upSol = $db->prepare("UPDATE solicitudes_vinculacion SET estado = 'aceptada' WHERE id_solicitud = ?");
                 $upSol->execute([$id_solicitud]);
                 
-                // B) REGISTRO EN TU TABLA INTERMEDIA DEFINITIVA: vinculaciones
+                // REGISTRO EN TU TABLA INTERMEDIA DEFINITIVA: vinculaciones
                 $insVinc = $db->prepare("INSERT INTO vinculaciones (tutor_id, id_alumno, fecha_union) VALUES (?, ?, NOW())");
                 $insVinc->execute([$solicitud['id_tutor'], $solicitud['id_alumno']]);
                 
@@ -124,11 +124,54 @@ class TutorController extends Controller {
 
                 //  GUARDAMOS EL MENSAJE FLASH DE ÉXITO
                
-                $_SESSION['flash_success'] = "¡Nota de aliento enviada correctamente al alumno!";
+                $_SESSION['flash_success'] = "¡Nota enviada correctamente al alumno!";
             }
             
             header('Location: ' . base_url('tutor/alumno/' . $id_alumno));
             exit;
         }
+    }
+
+   public function desasociarAlumno() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: " . base_url('admin/alumnos'));
+            exit;
+        }
+
+        $id_tutor = $_SESSION['user_id'] ?? null;
+        $id_alumno = $_POST['id_alumno'] ?? null;
+
+        if (!$id_tutor || !$id_alumno) {
+            $_SESSION['flash_error'] = "⚠️ Ocurrió un error al intentar procesar la solicitud.";
+            header("Location: " . base_url('admin/alumnos'));
+            exit;
+        }
+
+        $db = Database::connect();
+
+        try {
+            $db->beginTransaction();
+
+            $stmt1 = $db->prepare("DELETE FROM vinculaciones WHERE tutor_id = ? AND id_alumno = ?");
+            $stmt1->execute([$id_tutor, $id_alumno]);
+
+            $stmt2 = $db->prepare("UPDATE usuarios SET tutor_id = NULL WHERE id_usuario = ? AND tutor_id = ?");
+            $stmt2->execute([$id_alumno, $id_tutor]);
+
+            $stmt3 = $db->prepare("DELETE FROM mensajes_tutores WHERE id_tutor = ? AND id_alumno = ?");
+            $stmt3->execute([$id_tutor, $id_alumno]);
+
+
+
+            $db->commit();
+            $_SESSION['flash_success'] = "✅ El alumno ha sido desasociado por completo y se han limpiado sus datos vinculados.";
+
+        } catch (Exception $e) {
+            $db->rollBack();
+            $_SESSION['flash_error'] = "❌ Error al desasociar: " . $e->getMessage();
+        }
+
+        header('Location: ' . base_url('admin/alumnos'));
+        exit;
     }
 }

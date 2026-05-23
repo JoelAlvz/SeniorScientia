@@ -1,0 +1,204 @@
+.btn-volver-panel {
+    background: #6c757d; 
+    color: white; 
+    padding: 10px 20px; 
+    text-decoration: none; 
+    border-radius: 8px; 
+    font-weight: bold;
+    margin-left: auto;
+}
+.btn-volver-panel:hover {
+    background: #5a6268;
+}
+
+.detalle-alumno-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+.alerta-exito-flash {
+    background: #d4edda;
+    color: #155724;
+    border: 2px solid #c3e6cb;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.perfil-alumno-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.perfil-avatar {
+    background: #dddddd;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.perfil-info h2 {
+    margin: 0;
+    color: var(--texto-principal, #333333);
+}
+
+.perfil-info p {
+    margin: 5px 0;
+    color: #666666;
+}
+
+.card-nota-aliento-envio {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+    border: 2px solid var(--borde-suave, #ced4da);
+    margin-top: 30px;
+    box-shadow: var(--sombra-premium, 0 4px 6px rgba(0,0,0,0.05));
+}
+
+.card-nota-aliento-envio h3 {
+    margin-top: 0;
+}
+
+.form-nota-aliento {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.textarea-nota-aliento {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    border: 2px solid var(--borde-suave, #ccc);
+    font-family: sans-serif;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.textarea-nota-aliento:focus {
+    border-color: var(--color-primario, #007bff);
+}
+
+.btn-enviar-nota {
+    background: #ffc107;
+    color: #212529;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    align-self: flex-start;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-enviar-nota:hover {
+    background: #e0a800;
+    transform: translateY(-2px);
+}
+
+
+.separador-seccion {
+    margin: 30px 0;
+    border: none;
+    border-top: 1px solid #eeeeee;
+}
+
+.texto-lecciones-vacio {
+    color: #999999;
+    font-style: italic;
+}
+
+.grid-lecciones-progreso {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.item-leccion-progreso {
+    background: #fdfdfd;
+    border-left: 5px solid #28a745;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap; 
+}
+
+.leccion-info-izq strong {
+    font-size: 1.1rem;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.leccion-info-izq small {
+    display: block;
+    color: #666666;
+}
+
+.leccion-progreso-der {
+    text-align: right;
+    min-width: 150px;
+}
+
+.estado-porcentaje-texto {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.barra-progreso-fondo {
+    width: 150px;
+    background: #eeeeee;
+    height: 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.barra-progreso-relleno {
+    background: #28a745;
+    height: 100%;
+    transition: width 0.4s ease-in-out;
+}
+
+@media (max-width: 580px) {
+    .item-leccion-progreso {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .leccion-progreso-der {
+        text-align: left;
+        width: 100%;
+    }
+    .barra-progreso-fondo {
+        width: 100%; 
+    }
+    .btn-enviar-nota {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -34,6 +34,7 @@ $router->post('/practica/guardar-secuencia', 'PracticaController@guardarSecuenci
 $router->post('tutor/guardar-mensaje', 'TutorController@guardarmensaje');
 $router->get('/admin/alumnos', 'TutorController@adminAlumnos');
 $router->get('/tutor/procesar_solicitud', 'TutorController@procesarSolicitud');
+$router->post('/tutor/desasociar-alumno', 'TutorController@desasociarAlumno');
 $router->get('/practica/ver-secuencia/([0-9]+)', 'PracticaController@verSecuencia');
 $router->post('/practica/guardarPuntuacion', 'PracticaController@guardarPuntuacion');
 $router->get('/practica/teclado', 'PracticaController@teclado');
