@@ -191,7 +191,6 @@ body.alto-contraste.cursor-especial-activo .cursor-click-effect {
     box-shadow: 0 0 10px #ffcc00 !important;
 }
 
-/* Los enlaces reciben un borde o fondo extra para identificarlos al pasar el cursor */
 body.cursor-especial-activo a:hover, 
 body.cursor-especial-activo button:hover,
 body.cursor-especial-activo input[type="submit"]:hover {

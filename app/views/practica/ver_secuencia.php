@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="<?= base_url('css/secuencia_interactiva.css') ?>">
+<link rel="stylesheet" href="<?= base_url('css/accesibilidad.css') ?>">
 
 <?php if (!$paso): ?>
     <div class="secuencia-completada-container">
@@ -65,22 +66,45 @@
                     </div>
 
                     <div class="juego-iframe-box">
-                        <iframe id="iframe-juego" src="<?= base_url($juego['ruta_url']) ?>?meta=<?= $paso['meta_valor'] ?>&tipo=<?= $paso['tipo_meta'] ?>" width="100%" height="100%"></iframe>
+                        <iframe id="iframe-juego" 
+                                src="<?= base_url($juego['ruta_url']) ?>?meta=<?= $paso['meta_valor'] ?>&tipo=<?= $paso['tipo_meta'] ?>" 
+                                width="100%" 
+                                height="100%"
+                                onload="this.contentWindow.focus();">
+                        </iframe>
                     </div>
                 </div>
             <?php endif; ?>
 
         </div>
 
-        <div id="secuencia-botonera">
+        <div id="secuencia-botonera" style="display: flex; gap: 20px; justify-content: space-between; align-items: center; margin-top: 20px;">
+            
+            <?php 
+            if ($pasoNum == 1) {
+                $urlAtras = base_url('dashboard');
+                $textoAtras = '⬅️ VOLVER AL MENÚ';
+            } else {
+                $urlAtras = base_url('practica/ver-secuencia/' . $secuencia['id_secuencia'] . '?paso=' . ($pasoNum - 1));
+                $textoAtras = '⬅️ PASO ANTERIOR';
+            }
+            ?>
+            
+            <a id="btn-atras-secuencia" 
+               href="<?= $urlAtras ?>" 
+               style="background: #64748b; color: white; padding: 15px 30px; font-size: 1.2rem; font-weight: bold; text-decoration: none; border-radius: 10px; cursor: pointer; transition: background 0.2s; text-align: center; flex: 1;"
+               onmouseover="this.style.background='#475569'" onmouseout="this.style.background='#64748b'">
+               <?= $textoAtras ?>
+            </a>
+
             <?php 
             $esJuego = ($paso['tipo_contenido'] === 'juego');
             
             if ($esJuego) {
-                $estiloInicial = 'background: #94a3b8; color: #cbd5e1; cursor: not-allowed; opacity: 0.6;';
+                $estiloInicial = 'background: #94a3b8; color: #cbd5e1; cursor: not-allowed; opacity: 0.6; padding: 15px 30px; font-size: 1.2rem; font-weight: bold; text-decoration: none; border-radius: 10px; text-align: center; flex: 2;';
                 $textoInicial = '🔒 DEBES CUMPLIR LA META DEL JUEGO PARA CONTINUAR';
             } else {
-                $estiloInicial = 'background: #16a34a; color: white; cursor: pointer; opacity: 1;';
+                $estiloInicial = 'background: #16a34a; color: white; cursor: pointer; opacity: 1; padding: 15px 30px; font-size: 1.2rem; font-weight: bold; text-decoration: none; border-radius: 10px; text-align: center; flex: 2;';
                 $textoInicial = $tieneSiguiente ? 'SIGUIENTE PASO ➔' : '✔️ ¡TERMINAR TODA LA LECCIÓN!';
             }
 
@@ -104,3 +128,4 @@
 </script>
 
 <script src="<?= base_url('js/vistas/secuencia_interactiva.js') ?>"></script>
+<script src="<?= base_url('js/accesibilidad.js') ?>"></script>

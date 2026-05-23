@@ -1,6 +1,17 @@
 <link rel="stylesheet" href="<?= base_url('css/accesibilidad.css') ?>">
-<h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 5px;">Zona de Juegos y Práctica</h2>
-<p style="text-align: center; color: #64748b; margin-bottom: 30px;">Compite con tus compañeros de clase logrando las mejores puntuaciones.</p>
+
+<div style="max-width: 1200px; margin: 20px auto 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-family: sans-serif;">
+    <div style="text-align: left;">
+        <h2 style="font-size: 2.5rem; margin: 0 0 5px 0;">Zona de Juegos y Práctica</h2>
+        <p style="color: #64748b; margin: 0;">Compite con tus compañeros de clase logrando las mejores puntuaciones.</p>
+    </div>
+    
+    <a href="<?= base_url('dashboard') ?>" 
+       style="display: inline-flex; align-items: center; gap: 8px; background: #007bff; color: white; padding: 12px 24px; font-size: 1.1rem; font-weight: bold; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background 0.2s;"
+       onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
+       🏠 VOLVER AL INICIO
+    </a>
+</div>
 
 <div class="contenedor-practicas" style="padding: 20px; max-width: 1200px; margin: 0 auto; font-family: sans-serif;">
 
@@ -104,14 +115,15 @@
                     <?php foreach ($listaJuegos as $juego): ?>
                         <div class="card-juego" style="width: 250px; border: 2px solid #e2e8f0; border-radius: 15px; padding: 15px; text-align: center; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
-                                <img src="<?= base_url($juego['imagen_url'] ?: 'img/default_juego.png') ?>" style="width: 100%; border-radius: 10px; height: 140px; object-fit: cover;">
-                                <h4 style="margin: 15px 0 10px; color: #334155; font-size: 1.1rem;"><?= $juego['titulo'] ?></h4>
-                                <p style="font-size: 0.9rem; color: #64748b; line-height: 1.4; margin-bottom: 15px;"><?= $juego['descripcion'] ?></p>
+                                <img src="<?= base_url($juego['imagen_url'] ? 'img/' . $juego['imagen_url'] : 'img/default_juego.png') ?>" style="width: 100%; border-radius: 10px; height: 140px; object-fit: cover;">
+                                
+                                <h4 style="margin: 15px 0 10px; color: #334155; font-size: 1.1rem;"><?= htmlspecialchars($juego['titulo']) ?></h4>
+                                <p style="font-size: 0.9rem; color: #64748b; line-height: 1.4; margin-bottom: 15px;"><?= htmlspecialchars($juego['descripcion']) ?></p>
                             </div>
                             <a href="<?= base_url($juego['ruta_url']) ?>?id_juego=<?= $juego['id_juego'] ?>" 
-                               style="display: block; background: #28a745; color: white; padding: 10px; text-decoration: none; border-radius: 8px; font-weight: bold; transition: background 0.2s;"
-                               onmouseover="this.style.background='#218838'" onmouseout="this.style.background='#28a745'">
-                               ¡JUGAR!
+                            style="display: block; background: #28a745; color: white; padding: 10px; text-decoration: none; border-radius: 8px; font-weight: bold; transition: background 0.2s;"
+                            onmouseover="this.style.background='#218838'" onmouseout="this.style.background='#28a745'">
+                            ¡JUGAR!
                             </a>
                         </div>
                     <?php endforeach; ?>

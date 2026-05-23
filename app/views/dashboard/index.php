@@ -11,7 +11,7 @@
     
     <div class="header-izq-info">
         <h2>Panel de Control</h2>
-        <p>Hola, <strong><?= htmlspecialchars($_SESSION['user_nombre']) ?></strong>. ¿Qué quieres hacer hoy?</p>
+        <p>Hola, <strong><?= htmlspecialchars($_SESSION['user_nombre']) ?></strong> ¿Qué quieres hacer hoy?</p>
     </div>
     
     <div class="header-der">
@@ -33,6 +33,12 @@
         
         <?php 
         $db = Database::connect();
+        $id_alumno_sesion = $_SESSION['user_id'];
+
+        $stmtCheck = $db->prepare('SELECT tutor_id FROM vinculaciones WHERE id_alumno = ? LIMIT 1');
+        $stmtCheck->execute([$id_alumno_sesion]);
+        $vinculacion = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
         $stmt = $db->prepare("
             SELECT m.*, u.nombre as nombre_tutor 
             FROM mensajes_tutores m
@@ -41,18 +47,17 @@
             ORDER BY m.fecha_envio DESC 
             LIMIT 1
         ");
-        $stmt->execute([$_SESSION['user_id']]);
+        $stmt->execute([$id_alumno_sesion]);
         $nota_tutor = $stmt->fetch(PDO::FETCH_ASSOC);
         ?>
 
         <?php if ($nota_tutor): ?>
-            <div class="card-nota-aliento" style="margin-bottom: 30px;">
+            <div class="card-nota-aliento-container">
                 <div class="nota-icono">✉️</div>
                 <div class="nota-contenido">
                     <h4>Nota de aliento de tu tutor(a) <strong><?= htmlspecialchars($nota_tutor['nombre_tutor']) ?></strong>:</h4>
                     <p>"<?= htmlspecialchars($nota_tutor['mensaje']) ?>"</p>
-                    <small>Recibido el <?= date('d/m/Y a las H:i', strtotime($nota_tutor['fecha_envio'])) ?></small>
-                </div>
+                    <small>Recibido el <?= date('d/m/Y', strtotime($nota_tutor['fecha_envio'])) ?> a las <?= date('H:i', strtotime($nota_tutor['fecha_envio'])) ?></small>                </div>
             </div>
         <?php endif; ?>
 
@@ -103,20 +108,13 @@
                 <a href="<?= base_url('practica') ?>" class="btn-grande-premium">PRACTICAR AHORA</a>
             </div>
         </div>
-        
-      <div class="tareas-contenedor">
-            <h3>Tareas de mi Tutor</h3>
-            <?php 
-            $db = Database::connect();
-            $id_alumno_sesion = $_SESSION['user_id'];
-            
-            $stmtCheck = $db->prepare('SELECT tutor_id FROM vinculaciones WHERE id_alumno = ? LIMIT 1');
-            $stmtCheck->execute([$id_alumno_sesion]);
-            $vinculacion = $stmtCheck->fetch(PDO::FETCH_ASSOC);
-            
-            $rutas = [];
-            if ($vinculacion) {
-               
+
+
+        <?php if ($vinculacion): ?>
+            <div class="tareas-contenedor">
+                <h3>Tareas de mi Tutor:</h3>
+                <?php 
+                $rutas = [];
                 $stmt = $db->prepare('
                     SELECT s.* FROM secuencias_aprendizaje s 
                     WHERE s.tutor_id = ? 
@@ -125,102 +123,110 @@
                 ');
                 $stmt->execute([$vinculacion['tutor_id'], $id_alumno_sesion]);
                 $rutas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            }
-            ?>
-
-            <?php if (!$vinculacion): ?>
-                <div class="tareas-vacio-tutor">
-                    <p>👋 ¡Hola! Para empezar a recibir tareas personalizadas, necesitas conectarte con un tutor.</p>
-                    <span>Pídele el código de conexión a tu tutor o profesor e introdúcelo en la sección de vinculación de aquí abajo.</span>
-                </div>
-
-            <?php elseif ($rutas): ?>
-                <?php 
-                $ultima_tarea = $rutas[0];
-                $otras_tareas = array_slice($rutas, 1);
                 ?>
 
-                <div class="tareas-grid">
-                    <div class="tarea-item-card" style="border-left-color: var(--color-exito); box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15); position: relative;">
-                        <div>
-                            <?php if ($ultima_tarea['id_alumno'] !== null): ?>
-                                <span style="background: #007bff; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 5px;">⭐ SOLO PARA TI</span>
-                            <?php else: ?>
-                                <span style="background: var(--color-exito); color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 5px;">NUEVA TAREA</span>
-                            <?php endif; ?>
+                <?php if ($rutas): ?>
+                    <?php 
+                    $ultima_tarea = $rutas[0];
+                    $otras_tareas = array_slice($rutas, 1);
+                    ?>
 
-                            <h4 style="font-size: 1.3rem; color: var(--texto-principal); margin: 5px 0;"><?= htmlspecialchars($ultima_tarea['titulo']) ?></h4>
-                            <small style="color: #64748b;">Área: <strong><?= strtoupper($ultima_tarea['categoria']) ?></strong> | Asignada el: <?= date('d/m/Y', strtotime($ultima_tarea['fecha_creacion'])) ?></small>
+                    <div class="tareas-grid">
+                        <div class="tarea-item-card tarea-reciente-card" style="border-left-color: var(--color-exito);">
+                            <div>
+                                <?php if ($ultima_tarea['id_alumno'] !== null): ?>
+                                    <span class="badge-tarea-exclusiva">⭐ SOLO PARA TI</span>
+                                <?php else: ?>
+                                    <span class="badge-tarea-nueva" style="background: var(--color-exito);">NUEVA TAREA</span>
+                                <?php endif; ?>
+
+                                <h4 class="titulo-tarea-destacada"><?= htmlspecialchars($ultima_tarea['titulo']) ?></h4>
+                                <small class="info-tarea-destacada">Área: <strong><?= strtoupper($ultima_tarea['categoria']) ?></strong> | Asignada el: <?= date('d/m/Y', strtotime($ultima_tarea['fecha_creacion'])) ?></small>
+                            </div>
+                            
+                            <a href="<?= base_url('practica/ver-secuencia/' . $ultima_tarea['id_secuencia']) ?>" class="btn-empezar-leccion" style="background: var(--color-exito);">
+                                EMPEZAR LECCIÓN
+                            </a>
                         </div>
-                        
-                        <a href="<?= base_url('practica/ver-secuencia/' . $ultima_tarea['id_secuencia']) ?>" class="btn-empezar-leccion" style="background: var(--color-exito);">
-                            EMPEZAR LECCIÓN
-                        </a>
                     </div>
-                </div>
 
-                <details class="desplegable-tareas-historial" style="margin-top: 15px;">
-                    <summary class="summary-tareas">📁 Ver otras tareas anteriores (<?= count($otras_tareas) ?>)</summary>
-                    <div class="cuerpo-tareas-historial">
-                        <?php if (!empty($otras_tareas)): ?>
-                            <?php foreach ($otras_tareas as $ruta): ?>
-                                <div class="tarea-item-card" style="margin-bottom: 10px;">
-                                    <div>
-                                        <?php if ($ruta['id_alumno'] !== null): ?>
-                                            <span style="background: #007bff; color: white; padding: 1px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">⭐ PRIVADA</span>
-                                        <?php endif; ?>
-                                        <h4 style="margin: 5px 0;"><?= htmlspecialchars($ruta['titulo']) ?></h4>
-                                        <small>Creado el: <?= date('d/m/Y', strtotime($ruta['fecha_creacion'])) ?></small>
-                                    </div>
-                                    <a href="<?= base_url('practica/ver-secuencia/' . $ruta['id_secuencia']) ?>" class="btn-empezar-leccion">
-                                        EMPEZAR LECCIÓN
-                                    </a>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <p class="texto-desplegable-vacio">No tienes más tareas antiguas pendientes de realizar.</p>
-                        <?php endif; ?>
+                    <div class="desplegable-tareas-historial btn-historial-trigger" onclick="abrirModalTareas()">
+                        <div class="summary-tareas">📁 Ver otras tareas anteriores (<?= count($otras_tareas) ?>)</div>
                     </div>
-                </details>
 
-            <?php else: ?>
-                <div class="tareas-completadas-alerta">
-                    <p>🎉 ¡Buen trabajo! No tienes tareas pendientes de tu tutor por ahora.</p>
-                    <span>Has completado con éxito todo lo que tenías asignado. ¡Sigue así!</span>
-                </div>
-            <?php endif; ?>
-        </div>
+                    <div id="modal-tareas-anteriores" class="modal-personalizado-backdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
+                        <div class="modal-personalizado-contenido">
+                            
+                            <h3 class="modal-titulo-historial">Tareas Anteriores</h3>
+                            
+                            <div class="cuerpo-tareas-historial">
+                                <?php if (!empty($otras_tareas)): ?>
+                                    <?php foreach ($otras_tareas as $ruta): ?>
+                                        <div class="tarea-item-card item-historial-card">
+                                            <div>
+                                                <?php if ($ruta['id_alumno'] !== null): ?>
+                                                    <span class="badge-tarea-privada">⭐ PRIVADA</span>
+                                                <?php endif; ?>
+                                                <h4 class="titulo-tarea-historial"><?= htmlspecialchars($ruta['titulo']) ?></h4>
+                                                <small class="fecha-tarea-historial">Creado el: <?= date('d/m/Y', strtotime($ruta['fecha_creacion'])) ?></small>
+                                            </div>
+                                            <a href="<?= base_url('practica/ver-secuencia/' . $ruta['id_secuencia']) ?>" class="btn-empezar-leccion btn-empezar-historial">
+                                                EMPEZAR LECCIÓN
+                                            </a>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <p class="texto-desplegable-vacio">No tienes más tareas antiguas para realizar.</p>
+                                <?php endif; ?>
+                            </div>
 
-        <div class="vinculacion-box">
-            <h3>¿Tienes a alguien que te ayuda?</h3>
-            <p>Si tu hijo, nieto o tutor tiene un código, escríbelo aquí para que pueda ver tus progresos:</p>
-            
-            <form action="<?= base_url('perfil/vincular') ?>" method="POST" class="form-vinculacion">
-                <input type="number" name="codigo_tutor" placeholder="Ejemplo: 12" required class="input-codigo-tutor">
-                <button type="submit" class="btn-conectar-tutor">CONECTAR CON MI TUTOR</button>
-            </form>
-            
-            <?php if (isset($_SESSION['flash_vinculacion'])): ?>
-                <?php 
-                $tipo = $_SESSION['flash_vinculacion']['tipo'];
-                $mensaje = $_SESSION['flash_vinculacion']['msg'];
-                
-                $clase_alerta = 'texto-error-inline'; 
-                if ($tipo === 'exito') $clase_alerta = 'texto-exito-inline';
-                if ($tipo === 'aviso') $clase_alerta = 'texto-aviso-inline';
-                ?>
-                
-                <p class="<?= $clase_alerta ?>" style="margin-top: 15px; font-weight: bold; padding: 8px; border-radius: 6px;">
-                    <?= htmlspecialchars($mensaje) ?>
-                </p>
-                
-                <?php unset($_SESSION['flash_vinculacion']); ?>
-            <?php endif; ?>
+                            <div class="modal-footer-acciones">
+                                <button type="button" onclick="cerrarModalTareas()" class="btn-cerrar-modal-tareas">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
 
-            <?php if (isset($_GET['error']) && $_GET['error'] === 'codigo_invalido'): ?>
-                <p class="texto-error-inline" style="margin-top: 15px;">Ese código no es válido. Por favor, pídele el número correcto a tu tutor.</p>
-            <?php endif; ?>
-        </div>
+                <?php else: ?>
+                    <div class="tareas-completadas-alerta">
+                        <p>🎉 ¡Buen trabajo! No tienes tareas pendientes de tu tutor por ahora.</p>
+                        <span>Has completado con éxito todo lo que tenías asignado. ¡Sigue así!</span>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!$vinculacion): ?>
+            <div class="vinculacion-box">
+                <h3>¿Tienes a alguien que te ayuda?</h3>
+                <p>Si tu hijo, nieto o tutor tiene un código, escríbelo aquí para que pueda ver tus progresos:</p>
+                
+                <form action="<?= base_url('perfil/vincular') ?>" method="POST" class="form-vinculacion">
+                    <input type="number" name="codigo_tutor" placeholder="Ejemplo: 12" required class="input-codigo-tutor">
+                    <button type="submit" class="btn-conectar-tutor">CONECTAR CON MI TUTOR</button>
+                </form>
+                
+                <?php if (isset($_SESSION['flash_vinculacion'])): ?>
+                    <?php 
+                    $tipo = $_SESSION['flash_vinculacion']['tipo'];
+                    $mensaje = $_SESSION['flash_vinculacion']['msg'];
+                    
+                    $clase_alerta = 'texto-error-inline'; 
+                    if ($tipo === 'exito') $clase_alerta = 'texto-exito-inline';
+                    if ($tipo === 'aviso') $clase_alerta = 'texto-aviso-inline';
+                    ?>
+                    
+                    <p class="<?= $clase_alerta ?> flash-alerta-vinculo">
+                        <?= htmlspecialchars($mensaje) ?>
+                    </p>
+                    
+                    <?php unset($_SESSION['flash_vinculacion']); ?>
+                <?php endif; ?>
+
+                <?php if (isset($_GET['error']) && $_GET['error'] === 'codigo_invalido'): ?>
+                    <p class="texto-error-inline flash-alerta-vinculo">Ese código no es válido. Por favor, pídele el número correcto a tu tutor.</p>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
         <button id="btn-accesibilidad" class="btn-flotante-accesibilidad">👁️</button>
         <div id="menu-accesibilidad" class="panel-flotante-opciones">
@@ -257,7 +263,7 @@
         </div>
 
         <div class="tutor-alumnos-box">
-            <h3>Mis Alumnos Conectados</h3>
+            <h3>Mis Alumnos Conectados:</h3>
             <p>Tu código para que los alumnos te agreguen es: <strong class="tutor-codigo-resaltado"><?= $_SESSION['user_id'] ?></strong></p>
             
             <?php 
@@ -296,3 +302,4 @@
     <?php endif; ?>
 
 </div>
+<script src="<?= base_url('js/vistas/dashboard.js') ?>"></script>

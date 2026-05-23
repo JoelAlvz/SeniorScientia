@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function() {
         btn.id = 'btn-continuar';
         btn.innerText = "¡META LOGRADA! PULSA AQUÍ PARA CONTINUAR";
         
-        btn.href = base_url_php + "practica/verSecuencia/" + idActividad + "?paso=" + siguientePaso;
+        btn.href = base_url_php + "practica/ver-secuencia/" + idActividad + "?paso=" + siguientePaso;
         
         btn.style = `
             position: fixed;

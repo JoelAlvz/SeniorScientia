@@ -1,10 +1,12 @@
 <link rel="stylesheet" href="<?= base_url('css/accesibilidad.css') ?>">
+<link rel="stylesheet" href="<?= base_url('css/global.css') ?>">
+<link rel="stylesheet" href="<?= base_url('css/alumnos.css') ?>">
 
-<div style="max-width: 1000px; margin: 0 auto; padding: 20px; font-family: sans-serif;">
+<div class="contenedor-gestion-alumnos">
     
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <div class="cabecera-gestion-alumnos">
         <h2>Gestión de Alumnos asignados</h2>
-        <a href="<?= base_url('dashboard') ?>" style="background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: bold;">Volver al Panel</a>
+        <a href="<?= base_url('dashboard') ?>" class="btn-volver-panel">Volver al Panel</a>
     </div>
 
     <?php 
@@ -32,26 +34,26 @@
         $alumnosAceptados = $stmtVinc->fetchAll(PDO::FETCH_ASSOC);
     ?>
 
-    <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border-left: 8px solid #ffc107;">
-        <h3 style="margin-top: 0; color: #856404;">⏳ Solicitudes de Vinculación Pendientes</h3>
-        <p style="color: #666;">Alumnos que han introducido tu código y están esperando que los aceptes para ver sus tareas.</p>
+    <div class="contenedor-solicitudes-pendientes">
+        <h3 class="titulo-solicitudes-pendientes">⏳ Solicitudes de Vinculación Pendientes</h3>
+        <p class="descripcion-solicitudes-pendientes">Alumnos que han introducido tu código y están esperando que los aceptes para ver sus tareas.</p>
 
         <?php if (!empty($solicitudes)): ?>
-            <div style="display: grid; gap: 15px; margin-top: 20px;">
+            <div class="grid-solicitudes-pendientes">
                 <?php foreach ($solicitudes as $sol): ?>
-                    <div style="background: #fffdf0; padding: 20px; border-radius: 10px; border: 1px solid #ffeeba; display: flex; justify-content: space-between; align-items: center;">
+                    <div class="item-solicitud-pendiente">
                         <div>
-                            <strong style="font-size: 1.1rem; color: #333;"><?= htmlspecialchars($sol['nombre']) ?></strong> <br>
-                            <small style="color: #666;">Email: <?= htmlspecialchars($sol['email']) ?></small> <br>
-                            <small style="color: #999;">Recibida el: <?= date('d/m/Y H:i', strtotime($sol['fecha_solicitud'])) ?></small>
+                            <strong class="nombre-alumno-solicitud"><?= htmlspecialchars($sol['nombre']) ?></strong> <br>
+                            <small class="info-alumno-email">Email: <?= htmlspecialchars($sol['email']) ?></small> <br>
+                            <small class="info-alumno-fecha">Recibida el: <?= date('d/m/Y H:i', strtotime($sol['fecha_solicitud'])) ?></small>
                         </div>
-                        <div style="display: flex; gap: 10px;">
+                        <div class="acciones-solicitud-pendiente">
                             <a href="<?= base_url('tutor/procesar_solicitud?id='.$sol['id_solicitud'].'&accion=aceptar') ?>" 
-                               style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 0.9rem;">
+                               class="btn-aceptar-alumno">
                                 ACEPTAR ALUMNO
                             </a>
                             <a href="<?= base_url('tutor/procesar_solicitud?id='.$sol['id_solicitud'].'&accion=rechazar') ?>" 
-                               style="background: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 0.9rem;">
+                               class="btn-rechazar-alumno">
                                 RECHAZAR
                             </a>
                         </div>
@@ -59,34 +61,55 @@
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <p style="color: #888; font-style: italic; margin-top: 15px;">No tienes ninguna solicitud de alumno pendiente en este momento.</p>
+            <p class="texto-solicitudes-vacio">No tienes ninguna solicitud de alumno pendiente en este momento.</p>
         <?php endif; ?>
     </div>
 
 
-    <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 8px solid #28a745;">
-        <h3 style="margin-top: 0; color: #1e7e34;">✅ Mis Alumnos Conectados</h3>
-        <p style="color: #666;">Alumnos vinculados formalmente contigo. Puedes ver su progreso detallado en las lecciones asignadas.</p>
+<div class="contenedor-mis-alumnos-box">
+    <h3 class="titulo-mis-alumnos">✅ Mis Alumnos:</h3>
+    <p class="descripcion-mis-alumnos">Alumnos vinculados formalmente contigo. Puedes ver su progreso detallado en las lecciones asignadas.</p>
 
-        <?php if (!empty($alumnosAceptados)): ?>
-            <div style="display: grid; gap: 15px; margin-top: 20px;">
-                <?php foreach ($alumnosAceptados as $al): ?>
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong style="font-size: 1.1rem; color: #333;"><?= htmlspecialchars($al['nombre']) ?></strong> <br>
-                            <small style="color: #666;">Email: <?= htmlspecialchars($al['email']) ?></small> <br>
-                            <small style="color: #999;">Conectados desde: <?= date('d/m/Y', strtotime($al['fecha_union'])) ?></small>
-                        </div>
-                        <a href="<?= base_url('tutor/alumno/'.$al['id_usuario']) ?>" 
-                           style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 0.9rem;">
+    <?php if (!empty($alumnosAceptados)): ?>
+        <div class="grid-mis-alumnos">
+            <?php foreach ($alumnosAceptados as $al): ?>
+                <div class="item-alumno-vinculado">
+                    <div>
+                        <strong class="nombre-alumno-vinculado"><?= htmlspecialchars($al['nombre']) ?></strong> <br>
+                        <small class="info-alumno-email">Email: <?= htmlspecialchars($al['email']) ?></small> <br>
+                        <small class="info-alumno-fecha">Conectados desde: <?= date('d/m/Y', strtotime($al['fecha_union'])) ?></small>
+                    </div>
+                    <div class="acciones-alumno-vinculado">
+                        <a href="<?= base_url('tutor/alumno/'.$al['id_usuario']) ?>" class="btn-progreso-detallado-nuevo">
                             VER PROGRESO DETALLADO
                         </a>
+                        <button type="button" class="btn-desasociar-alumno" onclick="confirmarDesasociacion(<?= $al['id_usuario'] ?>, '<?= htmlspecialchars($al['nombre'], ENT_QUOTES) ?>')">
+                            DESASOCIAR
+                        </button>
                     </div>
-                <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <p class="texto-alumnos-vacio">Aún no tienes alumnos vinculados. Comparte tu código para que te envíen solicitudes.</p>
+    <?php endif; ?>
+</div>
+
+<div id="modal-confirmar-desasociar" class="modal-personalizado-backdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
+    <div class="modal-personalizado-contenido">
+        <h3 class="modal-titulo-historial text-danger-modal">⚠️ Confirmar Desasociación</h3>
+        <p id="texto-confirmacion-modal" class="texto-confirmacion-modal-body"></p>
+        
+        <form id="form-desasociar-alumno" action="<?= base_url('tutor/desasociar-alumno') ?>" method="POST">
+            <input type="hidden" name="id_alumno" id="modal-id-alumno-input" value="">
+            
+            <div class="modal-footer-acciones">
+                <button type="button" onclick="cerrarModalDesasociar()" class="btn-control-size-a btn-cancelar-modal-link">Cancelar</button>
+                <button type="submit" class="btn-cerrar-modal-tareas btn-confirmar-modal-space">Sí, Desasociar</button>
             </div>
-        <?php else: ?>
-            <p style="color: #888; font-style: italic; margin-top: 15px;">Aún no tienes alumnos vinculados. Comparte tu código para que te envíen solicitudes.</p>
-        <?php endif; ?>
+        </form>
     </div>
+</div>
 
 </div>
+<script src="<?= base_url('js/vistas/alumnos.js') ?>"></script>

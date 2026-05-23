@@ -1,0 +1,192 @@
+
+.contenedor-mis-alumnos-box {
+    background: white; 
+    padding: 25px; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+    border-left: 8px solid #28a745;
+}
+.titulo-mis-alumnos {
+    margin-top: 0; 
+    color: #1e7e34;
+}
+.descripcion-mis-alumnos {
+    color: #666;
+}
+.grid-mis-alumnos {
+    display: grid; 
+    gap: 15px; 
+    margin-top: 20px;
+}
+.item-alumno-vinculado {
+    background: #f8f9fa; 
+    padding: 20px; 
+    border-radius: 10px; 
+    border: 1px solid #e9ecef; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.nombre-alumno-vinculado {
+    font-size: 1.1rem; 
+    color: #333;
+}
+.info-alumno-email {
+    color: #666;
+}
+.info-alumno-fecha {
+    color: #999;
+}
+.texto-alumnos-vacio {
+    color: #888; 
+    font-style: italic; 
+    margin-top: 15px;
+}
+
+.acciones-alumno-vinculado {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.btn-progreso-detallado-nuevo {
+    background: #007bff; 
+    color: white; 
+    padding: 10px 20px; 
+    text-decoration: none; 
+    border-radius: 8px; 
+    font-weight: bold; 
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+.btn-progreso-detallado-nuevo:hover {
+    background: #0056b3;
+}
+
+.btn-desasociar-alumno {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+.btn-desasociar-alumno:hover {
+    background: #bd2130;
+    transform: translateY(-1px);
+}
+
+
+.contenedor-gestion-alumnos {
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding: 20px; 
+    font-family: sans-serif;
+}
+
+.cabecera-gestion-alumnos {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 30px;
+}
+.btn-volver-panel {
+    background: #6c757d; 
+    color: white; 
+    padding: 10px 20px; 
+    text-decoration: none; 
+    border-radius: 8px; 
+    font-weight: bold;
+}
+.btn-volver-panel:hover {
+    background: #5a6268;
+}
+
+.contenedor-solicitudes-pendientes {
+    background: white; 
+    padding: 25px; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+    margin-bottom: 30px; 
+    border-left: 8px solid #ffc107;
+}
+.titulo-solicitudes-pendientes {
+    margin-top: 0; 
+    color: #856404;
+}
+.descripcion-solicitudes-pendientes {
+    color: #666;
+}
+.grid-solicitudes-pendientes {
+    display: grid; 
+    gap: 15px; 
+    margin-top: 20px;
+}
+.item-solicitud-pendiente {
+    background: #fffdf0; 
+    padding: 20px; 
+    border-radius: 10px; 
+    border: 1px solid #ffeeba; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
+.nombre-alumno-solicitud {
+    font-size: 1.1rem; 
+    color: #333;
+}
+.texto-solicitudes-vacio {
+    color: #888; 
+    font-style: italic; 
+    margin-top: 15px;
+}
+
+.acciones-solicitud-pendiente {
+    display: flex; 
+    gap: 10px;
+}
+.btn-aceptar-alumno {
+    background: #28a745; 
+    color: white; 
+    padding: 10px 20px; 
+    text-decoration: none; 
+    border-radius: 8px; 
+    font-weight: bold; 
+    font-size: 0.9rem;
+}
+.btn-aceptar-alumno:hover {
+    background: #218838;
+}
+.btn-rechazar-alumno {
+    background: #dc3545; 
+    color: white; 
+    padding: 10px 20px; 
+    text-decoration: none; 
+    border-radius: 8px; 
+    font-weight: bold; 
+    font-size: 0.9rem;
+}
+.btn-rechazar-alumno:hover {
+    background: #c82333;
+}
+
+.text-danger-modal {
+    color: #dc3545;
+}
+.texto-confirmacion-modal-body {
+    font-size: 1.1rem; 
+    margin-bottom: 25px; 
+    color: #333;
+}
+.btn-cancelar-modal-link {
+    cursor: pointer; 
+    font-weight: bold;
+}
+.btn-confirmar-modal-space {
+    cursor: pointer; 
+    margin-left: 10px;
+}

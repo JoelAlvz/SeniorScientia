@@ -1,11 +1,14 @@
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
-    // Cambiamos el ID por defecto al 2 para la tabla ranking_juegos
     const idJuegoReal = urlParams.get('id_juego') || 2; 
     const base_url_php = document.body.getAttribute('data-base-url') || '';
 
+    const metaValor = parseInt(urlParams.get('meta')) || 0;
+    const tipoMeta = urlParams.get('tipo') || '';
+
     let puntos = 0;
     let letraActual = 'A';
+    let metaAlcanzada = false; 
     
     const letrasPosibles = "ABCDEFGHIJKMNPRSTUVWXYZ";
 
@@ -30,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-
     window.addEventListener('keydown', function(event) {
         if (modal && modal.style.display === 'flex') return;
 
@@ -45,6 +47,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 cuadroLetra.style.color = "white";
                 cuadroLetra.style.borderColor = "#28a745";
                 cuadroLetra.style.transform = "scale(1.1)";
+            }
+
+            if (tipoMeta === 'puntos' && metaValor > 0 && !metaAlcanzada) {
+                if (puntos >= metaValor) {
+                    metaAlcanzada = true;
+                    if (window.parent && window.parent !== window) {
+                        window.parent.postMessage("juego_completado", "*");
+                    }
+                }
             }
 
             setTimeout(() => {
@@ -102,7 +113,6 @@ document.addEventListener("DOMContentLoaded", function() {
             procesarGuardadoFinal();
         });
     }
-
 
     if (enlaceVolver) {
         enlaceVolver.addEventListener('click', function(event) {
