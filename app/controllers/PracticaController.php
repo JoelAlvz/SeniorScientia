@@ -168,7 +168,7 @@ public function guardarPuntuacion() {
         ]);
     }
 
-    public function guardarSecuencia() {
+public function guardarSecuencia() {
         if (session_status() === PHP_SESSION_NONE) session_start();
         
         if ($_SESSION['user_tipo'] !== 'tutor') {
@@ -198,7 +198,19 @@ public function guardarPuntuacion() {
             
             $idSecuencia = $db->lastInsertId();
 
-           
+            $stmtActPersonalizada = $db->prepare("
+                INSERT INTO actividades_personalizadas (id_actividad, tutor_id, id_alumno, titulo, descripcion_general, fecha_creacion, estado) 
+                VALUES (?, ?, ?, ?, ?, NOW(), ?)
+            ");
+            $stmtActPersonalizada->execute([
+                $idSecuencia, 
+                $_SESSION['user_id'], 
+                $id_alumno, 
+                $titulo,
+                'Secuencia de aprendizaje dinámica creada por el tutor.', 
+                'activo'                                                 
+            ]);
+
             if (!empty($_POST['pasos']) && is_array($_POST['pasos'])) {
                 $orden = 1;
 
@@ -228,9 +240,7 @@ public function guardarPuntuacion() {
                         $inputName = "imagen_paso_" . $indexJS;
                         if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
                             $extension = pathinfo($_FILES[$inputName]['name'], PATHINFO_EXTENSION);
-                            
                             $imagen_url = "paso_" . time() . "_" . uniqid() . "." . $extension;
-                            
                             $directorioDestino = __DIR__ . "/../../public/uploads/";
                             
                             if (!is_dir($directorioDestino)) {
@@ -277,7 +287,6 @@ public function guardarPuntuacion() {
             die("Error crítico al procesar la secuencia dinámica: " . $e->getMessage());
         }
     }
-
 
     public function verSecuencia($idSecuencia) {
         if (session_status() === PHP_SESSION_NONE) session_start();
@@ -361,7 +370,40 @@ public function guardarPuntuacion() {
             'tieneSiguiente' => $tieneSiguiente,
             'juego' => $juegoDatos
         ]);
+    }public function clicks() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . base_url('login'));
+            exit;
+        }
+        $this->view('practica/juego_clicks');
     }
 
+    public function dobleclick() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . base_url('login'));
+            exit;
+        }
+        $this->view('practica/juego_dobleclick');
+    }
+
+    public function arrastrar() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . base_url('login'));
+            exit;
+        }
+        $this->view('practica/juego_arrastrar');
+    }
+
+    public function frases() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . base_url('login'));
+            exit;
+        }
+        $this->view('practica/juego_teclado_frases');
+    }
 
 }

@@ -1,0 +1,286 @@
+/* public/css/leccion_teorica.css */
+
+.clase-teorica-body {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 10px;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #1e293b;
+}
+
+/* --- BANNER DE BIENVENIDA SUPERIOR (Modificadores de color por Fase) --- */
+.banner-bienvenida-clase {
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 35px;
+    box-shadow: var(--sombra-premium, 0 2px 4px rgba(0,0,0,0.02));
+}
+
+/* Verde: Ratón (Lecciones 1, 2, 3 y 4) */
+.banner-bienvenida-clase.verde-exito {
+    background: #f0fdf4;
+    border-left: 8px solid #22c55e;
+}
+.banner-bienvenida-clase.verde-exito .texto-bienvenida-clase {
+    color: #14532d;
+}
+
+/* Azul: Teclado - Letras sueltas (Lección 5) */
+.banner-bienvenida-clase.azul-info {
+    background: #e0f2fe;
+    border-left: 8px solid #007bff;
+}
+.banner-bienvenida-clase.azul-info .texto-bienvenida-clase {
+    color: #0369a1;
+}
+
+/* Rosa: Teclado - Escritura de Frases completas (Lección 6) */
+.banner-bienvenida-clase.rosa-frases {
+    background: #fdf2f8;
+    border-left: 8px solid #ec4899;
+}
+.banner-bienvenida-clase.rosa-frases .texto-bienvenida-clase {
+    color: #9d174d;
+}
+
+.texto-bienvenida-clase {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* --- TÍTULOS DE SECCIÓN --- */
+.titulo-seccion-clase {
+    font-size: 1.6rem;
+    color: var(--color-primario, #007bff);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--borde-suave, #e2e8f0);
+    padding-bottom: 10px;
+}
+
+/* --- REJILLAS Y COLUMNAS ADAPTABLES (Flexbox) --- */
+.grid-comparativo-elementos {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: stretch;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+/* Forzar centrado vertical si la lección lo requiere (ej. lección 6) */
+.grid-comparativo-elementos.centrado-vertical {
+    align-items: center;
+}
+
+.columna-texto-explicativo {
+    flex: 1;
+    min-width: 300px;
+    font-size: 1.25rem;
+    line-height: 1.7;
+}
+
+.texto-resaltado-grande {
+    color: var(--color-primario, #007bff);
+    font-size: 1.4rem;
+}
+
+/* Tarjetas informativas de elementos */
+.tarjeta-elemento-comparativa {
+    background: #ffffff;
+    border: 3px solid var(--borde-tarjeta, #cbd5e1);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    flex: 1;
+    min-width: 280px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Variación de ancho máximo para bloques o retos fijos (Lecciones 3, 4 y 6) */
+.tarjeta-elemento-comparativa.ancho-fijo-lateral {
+    max-width: 320px;
+}
+
+.titulo-elemento-tarjeta {
+    margin: 0 0 15px 0;
+    font-size: 1.4rem;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.titulo-elemento-tarjeta .color-azul-click { color: var(--color-primario, #007bff); }
+.titulo-elemento-tarjeta .color-rojo-click { color: #dc3545; }
+
+.descripcion-elemento-tarjeta {
+    color: var(--texto-secundario, #64748b);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Contenedores interiores de imágenes y gráficos */
+.wrapper-imagen-tarjeta {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.imagen-tarjeta-adaptada {
+    max-width: 250px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+/* Modificadores de ancho de imágenes según la lección */
+.imagen-tarjeta-adaptada.puntero-ajuste { max-width: 100px; }
+.imagen-tarjeta-adaptada.click-ajuste { max-width: 120px; }
+.imagen-tarjeta-adaptada.ritmo-ajuste { max-width: 140px; }
+
+.texto-badge-exito-imagen {
+    font-weight: bold;
+    color: var(--color-exito, #28a745);
+    font-size: 1.2rem;
+}
+
+/* Separador direccional de flujos (Lección 1) */
+.flecha-separador-flujo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #94a3b8;
+    font-weight: bold;
+}
+
+/* --- REPRODUCCIÓN VISUAL DE TECLAS (Lección 6) --- */
+.subtitulo-badge-tarjeta {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #64748b;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.simulador-tecla-espacio {
+    width: 200px;
+    height: 35px;
+    background: #e2e8f0;
+    border: 3px solid #94a3b8;
+    border-radius: 6px;
+    margin: 0 auto;
+    box-shadow: 0 4px 0 #cbd5e1;
+}
+
+.texto-pie-simulador {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+/* --- CAJAS EXPLICATIVAS EXTRA / ERRORES --- */
+.caja-reglas-oro {
+    background: #f8fafc;
+    border: 3px dashed var(--color-primario, #007bff);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 40px;
+}
+
+.caja-aviso-alerta {
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 5px solid #ffb703;
+    font-size: 1.15rem;
+    color: #663c00;
+}
+
+.lista-reglas-oro {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #334155;
+    padding-left: 25px;
+    margin-bottom: 0;
+}
+
+.item-regla-oro { margin-bottom: 12px; }
+.item-regla-oro.ultimo-item { margin-bottom: 0; }
+
+.texto-parrafo-clase {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+/* Elementos específicos del reto (Lección 4) */
+.wrapper-reto-ejercicio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.badge-flujo-reto {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.texto-descripcion-reto {
+    color: var(--texto-secundario, #64748b);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* --- SECCIÓN INFERIOR DE ACCIÓN (BOTONES) --- */
+.footer-accion-clase {
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
+.texto-pre-accion {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #475569;
+    margin-bottom: 15px;
+}
+
+.btn-navegar-practica-juego {
+    background: var(--color-exito, #28a745);
+    color: white;
+    padding: 20px 45px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #1e7e34;
+    transition: transform 0.1s ease, filter 0.2s ease;
+}
+
+.btn-navegar-practica-juego:hover {
+    filter: brightness(1.1);
+}
+
+.btn-navegar-practica-juego:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #1e7e34;
+}

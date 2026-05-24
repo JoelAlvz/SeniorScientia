@@ -130,10 +130,7 @@ function aplicarNivelTexto(nivel) {
     if (nivel === 'gigante') document.body.classList.add('texto-gigante');
 }
 
-function alternarContraste() {
-    document.body.classList.toggle('alto-contraste');
-    localStorage.setItem('accesibilidad-contraste', document.body.classList.contains('alto-contraste') ? 'activo' : 'inactivo');
-}
+
 
 function alternarCursorEspecial() {
     const circle = document.getElementById('custom-cursor-circle');
@@ -170,7 +167,6 @@ function actualizarBotonCursor(isActivo) {
 // ==================================================================
 // ASISTENTE REPRODUCTOR DE VOZ (TEXT-TO-SPEECH)
 // ==================================================================
-
 function alternarVozAsistida() {
     const activo = document.body.classList.toggle('voz-asistida-activa');
     
@@ -178,7 +174,7 @@ function alternarVozAsistida() {
         localStorage.setItem('accesibilidad-voz', 'activo');
         actualizarBotonVoz(true);
         activarEscuchadoresVoz();
-        hablarTexto("Asistencia por voz activada");
+        hablarTexto("Asistencia por voz activada. Ahora puedes pasar el ratón por los textos para escucharlos.");
     } else {
         localStorage.setItem('accesibilidad-voz', 'inactivo');
         actualizarBotonVoz(false);
@@ -203,19 +199,24 @@ function actualizarBotonVoz(isActivo) {
 
 function hablarTexto(texto) {
     if ('speechSynthesis' in window) {
+        // Cancelamos solo si el texto nuevo es diferente, 
+        // para evitar interrupciones bruscas por micro-movimientos
         window.speechSynthesis.cancel();
-        const textoLimpio = texto.replace(/[👋🎉🎯🌓👁️🥇✉️🔊✅]/g, '').trim();
+        
+        // Limpiamos emojis y espacios extra
+        const textoLimpio = texto.replace(/[👋🎉🎯🌓👁️🥇✉️🔊✅🛑]/g, '').trim();
         if (textoLimpio.length === 0) return;
 
         const utterance = new SpeechSynthesisUtterance(textoLimpio);
         utterance.lang = 'es-ES';
-        utterance.rate = 0.85; 
+        utterance.rate = 0.9; 
         window.speechSynthesis.speak(utterance);
     }
 }
 
 function activarEscuchadoresVoz() {
-    const elementosLegibles = document.querySelectorAll('h1, h2, h3, h4, a, button, .card p, strong, label');
+    // Añadimos 'p' y 'span' para capturar más texto legible
+    const elementosLegibles = document.querySelectorAll('h1, h2, h3, h4, a, button, p, strong, label, span');
 
     elementosLegibles.forEach(elemento => {
         if (!elemento.dataset.vozAsignada) {
@@ -224,20 +225,21 @@ function activarEscuchadoresVoz() {
             elemento.addEventListener('mouseover', (e) => {
                 if (document.body.classList.contains('voz-asistida-activa')) {
                     e.stopPropagation(); 
+                    
+                    // Solo leemos si el elemento tiene texto significativo
                     let textoALeer = elemento.innerText || elemento.textContent;
                     
-                    if (elemento.tagName === 'A' || elemento.tagName === 'BUTTON' || elemento.classList.contains('btn-grande')) {
-                        textoALeer = "Botón: " + textoALeer;
+                    // Identificación de elementos interactivos
+                    if (elemento.tagName === 'A' || elemento.tagName === 'BUTTON') {
+                        textoALeer = "Botón o enlace: " + textoALeer;
                     }
+                    
                     hablarTexto(textoALeer);
                 }
             });
 
-            elemento.addEventListener('mouseleave', () => {
-                if (document.body.classList.contains('voz-asistida-activa')) {
-                    window.speechSynthesis.cancel();
-                }
-            });
+            // ELIMINADO el 'mouseleave' que cancelaba la voz
+            // Esto permite que la voz termine de leer aunque el usuario salga del elemento.
         }
     });
 }

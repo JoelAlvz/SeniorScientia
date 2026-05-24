@@ -23,11 +23,15 @@
         </div>
 
         <div class="juego-raton-footer" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 15px;">
-            <a href="javascript:void(0);" id="enlace-volver-menu" style="font-size: 1.2rem; color: #666; text-decoration: underline; padding: 10px; cursor: pointer;">Volver al menú</a>
             
-            <button id="btn-terminar-practica" style="background-color: #dc3545; color: white; border: none; padding: 12px 24px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer;">
-                🛑 Terminar y Guardar Juego
-            </button>
+            <?php if (!isset($_GET['meta'])): ?>
+                <a href="javascript:void(0);" id="enlace-volver-menu" style="font-size: 1.2rem; color: #666; text-decoration: underline; padding: 10px; cursor: pointer;">Volver al menú</a>
+                
+                <button id="btn-terminar-practica" style="background-color: #dc3545; color: white; border: none; padding: 12px 24px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer;">
+                    🛑 Terminar y Guardar Juego
+                </button>
+            <?php endif; ?>
+
         </div>
         
     </div>

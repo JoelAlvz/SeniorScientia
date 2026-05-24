@@ -53,9 +53,8 @@
                         <span class="txt-label">Objetivo:</span>
                         <strong class="txt-meta">
                             <?php 
-                            if ($paso['tipo_meta'] === 'puntos') echo "Conseguir " . $paso['meta_valor'] . " puntos.";
-                            if ($paso['tipo_meta'] === 'segundos') echo "Jugar durante " . $paso['meta_valor'] . " segundos.";
-                            if ($paso['tipo_meta'] === 'partidas') echo "Completar " . $paso['meta_valor'] . " partidas.";
+                            // 🌟 Como ahora todo es obligatoriamente por puntos, simplificamos la etiqueta
+                            echo "Conseguir " . (int)$paso['meta_valor'] . " puntos.";
                             ?>
                         </strong>
                     </div>
@@ -83,10 +82,10 @@
             <?php 
             if ($pasoNum == 1) {
                 $urlAtras = base_url('dashboard');
-                $textoAtras = '⬅️ VOLVER AL MENÚ';
+                $textoAtras = 'VOLVER AL MENÚ';
             } else {
                 $urlAtras = base_url('practica/ver-secuencia/' . $secuencia['id_secuencia'] . '?paso=' . ($pasoNum - 1));
-                $textoAtras = '⬅️ PASO ANTERIOR';
+                $textoAtras = '⬅ PASO ANTERIOR';
             }
             ?>
             

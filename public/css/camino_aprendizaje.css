@@ -1,0 +1,201 @@
+
+.contenedor-cursos {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Cabecera del Listado */
+.header-camino-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.titulo-camino {
+    font-size: 2rem;
+    margin: 0;
+    color: var(--color-primario);
+}
+
+.descripcion-camino {
+    font-size: 1.2rem;
+    color: var(--texto-secundario);
+    margin-top: 0;
+    margin-bottom: 40px;
+}
+
+/* Botón Volver al Panel */
+.btn-volver-panel {
+    background: var(--color-secundario, #6c757d); /* Por si no se define sec, fallback gris */
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 4px 0 var(--color-secundario-oscuro, #5a6268);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.1s ease, filter 0.2s ease;
+}
+
+.btn-volver-panel:hover {
+    filter: brightness(1.08);
+}
+
+.btn-volver-panel:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--color-secundario-oscuro, #5a6268);
+}
+
+/* Bloques de Módulos / Fases */
+.fase-bloque {
+    margin-bottom: 50px;
+}
+
+.titulo-fase-modulo {
+    background: var(--color-primario);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 0;
+}
+
+.lista-lecciones {
+    margin-top: 20px;
+}
+
+/* Tarjetas de Lección Común */
+.leccion-card {
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.leccion-card-info-side {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.leccion-card-badge-numero {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.leccion-card-titulo {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.leccion-card-descripcion {
+    margin: 5px 0 0;
+}
+
+/* Tarjeta Desbloqueada (Disponible) */
+.leccion-card.desbloqueada {
+    background: white;
+    border: 3px solid var(--color-primario);
+    box-shadow: var(--sombra-premium, 0 4px 15px rgba(0, 0, 0, 0.05));
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.leccion-card.desbloqueada:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.leccion-card.desbloqueada .leccion-card-badge-numero {
+    background: var(--color-primario);
+    color: white;
+}
+
+.leccion-card.desbloqueada .leccion-card-titulo {
+    color: #1e293b;
+}
+
+.leccion-card.desbloqueada .leccion-card-descripcion {
+    color: var(--texto-secundario);
+}
+
+/* Botones Empezar / Repetir */
+.btn-accion-leccion {
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: transform 0.1s ease, filter 0.2s ease;
+}
+
+.btn-accion-leccion:hover {
+    filter: brightness(1.1);
+}
+
+.btn-accion-leccion:active {
+    transform: translateY(3px);
+}
+
+.btn-accion-leccion.empezar {
+    background: var(--color-primario);
+    color: white;
+    box-shadow: 0 4px 0 var(--color-primario-hover, #0056b3);
+}
+
+.btn-accion-leccion.empezar:active {
+    box-shadow: 0 1px 0 var(--color-primario-hover, #0056b3);
+}
+
+.btn-accion-leccion.repetir {
+    background: var(--color-exito);
+    color: white;
+    box-shadow: 0 4px 0 #1e7e34;
+}
+
+.btn-accion-leccion.repetir:active {
+    box-shadow: 0 1px 0 #1e7e34;
+}
+
+/* Tarjeta Bloqueada */
+.leccion-card.bloqueada {
+    background: var(--fondo-tarjeta-gris);
+    border: 2px dashed var(--borde-tarjeta);
+    opacity: 0.6;
+}
+
+.leccion-card.bloqueada .leccion-card-badge-numero {
+    background: var(--texto-secundario);
+    color: white;
+}
+
+.leccion-card.bloqueada .leccion-card-titulo {
+    color: var(--texto-atenuado);
+}
+
+.leccion-card.bloqueada .leccion-card-descripcion {
+    color: var(--borde-tarjeta);
+}
+
+.tag-bloqueado-badge {
+    color: var(--texto-secundario);
+    font-weight: bold;
+    background: var(--borde-suave);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+}

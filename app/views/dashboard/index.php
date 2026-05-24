@@ -30,7 +30,11 @@
 <div class="menu-container">
 
     <?php if ($_SESSION['user_tipo'] === 'alumno'): ?>
-        
+        <script>
+            setInterval(function() {
+                window.location.reload();
+            }, 20000);
+        </script>
         <?php 
         $db = Database::connect();
         $id_alumno_sesion = $_SESSION['user_id'];
@@ -237,8 +241,6 @@
                 <button onclick="cambiarTexto('grande')" class="btn-control-size-a-plus">A+</button>
                 <button onclick="cambiarTexto('gigante')" class="btn-control-size-a-plus-plus">A++</button>
             </div>
-            <p class="panel-seccion-titulo">Colores de la pantalla:</p>
-            <button id="btn-contraste" onclick="alternarContraste()" class="btn-panel-contraste">🌓 Alto Contraste</button>
             <p class="panel-seccion-titulo">Ayuda para el ratón:</p>
             <button id="btn-cursor" onclick="alternarCursorEspecial()" class="btn-panel-cursor">🎯 Resaltar Ratón</button>
             <p class="panel-seccion-titulo">Asistencia por voz:</p>

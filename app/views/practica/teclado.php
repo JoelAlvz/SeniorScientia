@@ -62,9 +62,7 @@
 
     <script src="<?= base_url('js/vistas/juego_teclado.js') ?>"></script>
 
-    <?php if (!isset($_GET['meta'])): ?>
-        <script src="<?= base_url('js/accesibilidad.js') ?>"></script>
-    <?php endif; ?>
+    <script src="<?= base_url('js/accesibilidad.js') ?>"></script>
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {

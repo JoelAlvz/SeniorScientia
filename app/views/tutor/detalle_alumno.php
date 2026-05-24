@@ -23,16 +23,16 @@
     </div>
 
     <div class="card-nota-aliento-envio">
-        <h3>✍️ Enviar Nota de Aliento</h3>
+        <h3>✍️ Enviar Nota al Alumno</h3>
         <p>Escribe un mensaje motivador que verá el alumno en grande cuando entre a su panel de control.</p>
         
         <form action="<?= base_url('tutor/guardar-mensaje') ?>" method="POST" class="form-nota-aliento">
             <input type="hidden" name="id_alumno" value="<?= $alumno['id_usuario'] ?>">
             
-            <textarea name="mensaje_nota" rows="3" placeholder="Ejemplo: ¡Hola Juan! He visto que has ganado dos medallas nuevas hoy. ¡Eres un campeón, sigue así! 🌟" required class="textarea-nota-aliento"></textarea>
+            <textarea name="mensaje_nota" rows="3" placeholder="Ejemplo: ¡Hola Juan! He visto que has ganado dos medallas nuevas hoy. ¡Eres un campeón, sigue así!" required class="textarea-nota-aliento"></textarea>
             
             <button type="submit" class="btn-enviar-nota">
-                🚀 ENVIAR NOTA AL ALUMNO
+                ENVIAR NOTA AL ALUMNO
             </button>
         </form>
     </div>

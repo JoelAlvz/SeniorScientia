@@ -1,0 +1,296 @@
+/* public/css/zona_juegos.css */
+
+.zona-juegos-top-bar {
+    max-width: 1200px;
+    margin: 20px auto 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: sans-serif;
+}
+
+.zona-juegos-title-container {
+    text-align: left;
+}
+
+.zona-juegos-title-container h2 {
+    font-size: 2.5rem;
+    margin: 0 0 5px 0;
+}
+
+.zona-juegos-title-container p {
+    color: #64748b;
+    margin: 0;
+}
+
+.btn-volver-dashboard {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #007bff;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: background 0.2s;
+}
+
+.btn-volver-dashboard:hover {
+    background: #0056b3;
+}
+
+.contenedor-practicas {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: sans-serif;
+}
+
+/* Cartel de nuevo récord */
+.banner-record {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 25px;
+    border-radius: 16px;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 8px 20px rgba(40,167,69,0.3);
+    border: 3px solid white;
+    animation: popIn 0.5s ease-out;
+}
+
+.banner-record-emojis {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.banner-record h2 {
+    margin: 0 0 10px 0;
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.banner-record p {
+    font-size: 1.3rem;
+    margin: 0;
+    opacity: 0.95;
+    line-height: 1.4;
+}
+
+.btn-cerrar-banner {
+    margin-top: 15px;
+    background: white;
+    color: #28a745;
+    border: none;
+    padding: 8px 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Tabla de clasificación y filtros */
+.bloque-clasificacion {
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.bloque-clasificacion h3 {
+    margin-top: 0;
+    color: #1e293b;
+    font-size: 1.4rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+.filtro-ranking-form {
+    margin: 15px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filtro-ranking-form label {
+    font-weight: bold;
+    color: #475569;
+}
+
+.filtro-ranking-form select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    font-size: 1rem;
+    cursor: pointer;
+    min-width: 250px;
+}
+
+.tabla-responsiva-wrapper {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+.tabla-clasificacion {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.tabla-clasificacion thead tr {
+    background: #f1f5f9;
+    color: #475569;
+    font-weight: bold;
+}
+
+.tabla-clasificacion th {
+    padding: 12px;
+}
+
+.tabla-clasificacion th:first-child {
+    border-radius: 8px 0 0 8px;
+}
+
+.tabla-clasificacion th:last-child {
+    border-radius: 0 8px 8px 0;
+}
+
+.tabla-clasificacion tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.2s;
+}
+
+.tabla-clasificacion tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.tabla-clasificacion td {
+    padding: 12px;
+}
+
+.col-puesto {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.col-alumno {
+    font-weight: 600;
+    color: #334155;
+}
+
+.col-puntos {
+    color: #16a34a;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.col-fecha {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* Mensajes informativos de estado */
+.msg-tabla-vacia {
+    color: #64748b;
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 15px;
+    border: 1px dashed #cbd5e1;
+}
+
+.msg-tabla-espera {
+    color: #475569;
+    background: #eff6ff;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 15px;
+    border: 1px solid #bfdbfe;
+}
+
+/* Listado de secciones y categorías de juegos */
+.seccion-categoria-juegos {
+    margin-bottom: 40px;
+}
+
+.seccion-categoria-juegos h3 {
+    text-transform: capitalize;
+    border-bottom: 3px solid #007bff;
+    display: inline-block;
+    color: #1e293b;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.grid-juegos-categoria {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card-juego {
+    width: 250px;
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-juego-img {
+    width: 100%;
+    border-radius: 10px;
+    height: 140px;
+    object-fit: cover;
+}
+
+.card-juego h4 {
+    margin: 15px 0 10px;
+    color: #334155;
+    font-size: 1.1rem;
+}
+
+.card-juego-desc {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+.btn-jugar-juego {
+    display: block;
+    background: #28a745;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-jugar-juego:hover {
+    background: #218838;
+}

@@ -66,13 +66,11 @@ function agregarPaso(tipo) {
             </select>
             
             <div class="caja-meta-juego">
-                <label class="label-bold">Condición para avanzar:</label>
-                <select name="pasos[${contadorPasos}][tipo_meta]" class="select-meta-condicion">
-                    <option value="puntos">Conseguir estos puntos:</option>
-                    <option value="segundos">Jugar estos segundos:</option>
-                    <option value="partidas">Terminar este número de partidas:</option>
-                </select>
-                <input type="number" name="pasos[${contadorPasos}][meta_valor]" value="10" class="input-meta-valor">
+                <label class="label-bold">Conseguir estos puntos:</label>
+                
+                <input type="hidden" name="pasos[${contadorPasos}][tipo_meta]" value="puntos">
+                
+                <input type="number" name="pasos[${contadorPasos}][meta_valor]" value="10" min="1" class="input-meta-valor">
             </div>
         `;
     }

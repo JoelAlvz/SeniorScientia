@@ -143,4 +143,23 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.href = base_url_php + 'dashboard';
         });
     }
+    setInterval(() => {
+        if (modal && modal.style.display !== 'flex') {
+            window.focus();
+        }
+    }, 1000);
+    if (window.self !== window.top) {
+        const titulo = document.getElementById('titulo-dobleclick-juego');
+        const instruccion = document.getElementById('texto-instruccion');
+
+        if (titulo) titulo.style.display = 'none';
+        
+        document.addEventListener('mousemove', function() {
+            window.parent.postMessage('raton-dentro-del-juego', '*');
+        });
+
+        document.addEventListener('mouseleave', function() {
+            window.parent.postMessage('raton-salio-del-juego', '*');
+        });
+    }
 });
