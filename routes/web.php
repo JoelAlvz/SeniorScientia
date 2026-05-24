@@ -9,7 +9,7 @@ $router->post('/login', 'AuthController@authenticate');
 // Rutas de Registro
 $router->get('/register', 'AuthController@register');
 $router->post('/register', 'AuthController@register'); 
-
+$router->post('/verificar-email', 'AuthController@verificarEmail'); 
 // Dashboard y Logout
 $router->get('/dashboard', 'DashboardController@index');
 $router->get('/logout', 'AuthController@logout');

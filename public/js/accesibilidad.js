@@ -75,6 +75,31 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    window.addEventListener('message', (event) => {
+        if (!document.body.classList.contains('cursor-especial-activo')) return;
+
+        if (event.data === 'raton-dentro-del-juego') {
+            circle.style.visibility = 'hidden';
+            circle.style.opacity = '0';
+        }
+        
+        if (event.data === 'raton-salio-del-juego') {
+            circle.style.visibility = 'visible';
+            circle.style.opacity = '1';
+        }
+    });
+    document.addEventListener('click', (e) => {
+        if (document.body.classList.contains('cursor-especial-activo')) {
+            let clickDot = document.createElement('div');
+            clickDot.className = 'cursor-click-effect';
+            clickDot.style.left = e.clientX + 'px';
+            clickDot.style.top = e.clientY + 'px';
+            document.body.appendChild(clickDot);
+
+            setTimeout(() => { clickDot.remove(); }, 400);
+        }
+    });
+
     const cursorGuardado = localStorage.getItem('accesibilidad-cursor');
     if (cursorGuardado === 'activo') {
         document.body.classList.add('cursor-especial-activo');

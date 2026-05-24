@@ -28,7 +28,29 @@ class AuthController extends Controller {
         $this->view('auth/register');
 
     }
+    public function verificarEmail() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['existe' => false]);
+            exit;
+        }
 
+        $input = json_decode(file_get_contents('php://input'), true);
+        $email = $input['email'] ?? '';
+
+        if (empty($email)) {
+            echo json_encode(['existe' => false]);
+            exit;
+        }
+
+        $user = Usuario::findByEmail($email);
+
+        if ($user) {
+            echo json_encode(['existe' => true]);
+        } else {
+            echo json_encode(['existe' => false]);
+        }
+        exit;
+    }
     public function store() {
         Usuario::create($_POST);
         $this->redirect('/login');

@@ -1,4 +1,3 @@
-<!-- app/views/cursos/index.php -->
 <link rel="stylesheet" href="<?= base_url('css/accesibilidad.css') ?>">
 
 <div class="contenedor-cursos" style="max-width: 800px; margin: 0 auto; padding: 20px;">
@@ -7,39 +6,66 @@
         Sigue los pasos en orden para convertirte en un experto con tu ordenador.
     </p>
 
-    <!-- FASE 1 -->
-    <div class="fase-bloque" style="margin-bottom: 50px;">
-        <h3 style="background: #0f0f0e; padding: 15px; border-radius: 10px; display: inline-block;">Fase 1: El Despertar Digital</h3>
-        
-        <div class="lista-lecciones" style="margin-top: 20px;">
+    <?php 
+    $ultimaSecuenciaCompletada = true; 
+    ?>
+
+    <?php foreach ($modulos as $modulo): ?>
+        <div class="fase-bloque" style="margin-bottom: 50px;">
+            <h3 style="background: #0f0f0e; color: white; padding: 15px; border-radius: 10px; display: inline-block;">
+                <?= htmlspecialchars($modulo['titulo']) ?>
+            </h3>
             
-            <!-- LECCIÓN 1 -->
-            <div class="leccion-card" style="background: white; border: 3px solid #007bff; border-radius: 20px; padding: 25px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div style="background: #007bff; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold;">1</div>
-                    <div>
-                        <h4 style="margin: 0; font-size: 1.4rem;">El Ratón y la Flecha</h4>
-                        <p style="margin: 5px 0 0; color: #555;">Aprende a moverte por la pantalla.</p>
-                    </div>
-                </div>
-                <!-- Botón de estado -->
-                <a href="<?= base_url('cursos/leccion/1') ?>" style="background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem;">EMPEZAR</a>
-            </div>
+            <div class="lista-lecciones" style="margin-top: 20px;">
+                
+                <?php foreach ($modulo['secuencias'] as $index => $secuencia): ?>
+                    <?php 
+                    $estaCompletada = in_array($secuencia['id_secuencia'], $completadas);
+                    
+                    $estaDesbloqueada = $ultimaSecuenciaCompletada; 
+                    ?>
 
-            <!-- LECCIÓN 2 (Bloqueada por ahora) -->
-            <div class="leccion-card" style="background: #f8f9fa; border: 2px dashed #ccc; border-radius: 20px; padding: 25px; display: flex; align-items: center; justify-content: space-between; opacity: 0.7;">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div style="background: #6c757d; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold;">2</div>
-                    <div>
-                        <h4 style="margin: 0; font-size: 1.4rem;">Hacer Clic</h4>
-                        <p style="margin: 5px 0 0; color: #555;">Cómo seleccionar cosas con el botón.</p>
-                    </div>
-                </div>
-                <span style="color: #6c757d; font-weight: bold;">🔒 BLOQUEADO</span>
-            </div>
+                    <?php if ($estaDesbloqueada): ?>
+                        <div class="leccion-card" style="background: white; border: 3px solid #007bff; border-radius: 20px; padding: 25px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <div style="background: #007bff; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold;">
+                                    <?= $index + 1 ?>
+                                </div>
+                                <div>
+                                    <h4 style="margin: 0; font-size: 1.4rem;"><?= htmlspecialchars($secuencia['titulo']) ?></h4>
+                                    <p style="margin: 5px 0 0; color: #555;"><?= htmlspecialchars($secuencia['descripcion']) ?></p>
+                                </div>
+                            </div>
+                            
+                            <?php if ($estaCompletada): ?>
+                                <a href="<?= base_url('practica/ver-secuencia/' . $secuencia['id_secuencia']) ?>" style="background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem;">⭐ REPETIR</a>
+                            <?php else: ?>
+                                <a href="<?= base_url('practica/ver-secuencia/' . $secuencia['id_secuencia']) ?>" style="background: #007bff; color: white; padding: 15px 30px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem;">EMPEZAR</a>
+                            <?php endif; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="leccion-card" style="background: #f8f9fa; border: 2px dashed #ccc; border-radius: 20px; padding: 25px; display: flex; align-items: center; justify-content: space-between; opacity: 0.7; margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <div style="background: #6c757d; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold;">
+                                    <?= $index + 1 ?>
+                                </div>
+                                <div>
+                                    <h4 style="margin: 0; font-size: 1.4rem; color: #888;"><?= htmlspecialchars($secuencia['titulo']) ?></h4>
+                                    <p style="margin: 5px 0 0; color: #aaa;"><?= htmlspecialchars($secuencia['descripcion']) ?></p>
+                                </div>
+                            </div>
+                            <span style="color: #6c757d; font-weight: bold;">🔒 BLOQUEADO</span>
+                        </div>
+                    <?php endif; ?>
 
+                    <?php 
+                    $ultimaSecuenciaCompletada = $estaCompletada; 
+                    ?>
+                <?php endforeach; ?>
+
+            </div>
         </div>
-    </div>
+    <?php endforeach; ?>
 </div>
 
 <script src="<?= base_url('js/accesibilidad.js') ?>"></script>

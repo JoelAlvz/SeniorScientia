@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnModalCancelar = document.getElementById('btn-modal-cancelar');
     const btnModalSalir = document.getElementById('btn-modal-salir-sin-guardar');
 
+
     if (window.self !== window.top) {
         const titulo = document.getElementById('titulo-raton-juego');
         const mensajeMeta = document.getElementById('mensaje-meta-tutor');
@@ -30,6 +31,14 @@ document.addEventListener("DOMContentLoaded", function() {
         if (instruccion) {
             instruccion.style.color = '#ffffff';
         }
+
+        document.addEventListener('mousemove', function() {
+            window.parent.postMessage('raton-dentro-del-juego', '*');
+        });
+
+        document.addEventListener('mouseleave', function() {
+            window.parent.postMessage('raton-salio-del-juego', '*');
+        });
     }
 
     if (objetivo) {
@@ -37,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function() {
             moverObjetivo();
         });
     }
-    // ------------------------------------
 
     function moverObjetivo() {
         if (!zona || !objetivo) return;
