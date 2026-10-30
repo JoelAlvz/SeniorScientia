@@ -24,8 +24,7 @@
                 <div class="progress-line" id="registration-progress"></div>
             </div>
 
-            <form action="/proyectoFinCurso/MayoresApp/public/register" method="POST" id="form-registro-dinamico" novalidate>
-                
+            <form action="<?= base_url('register') ?>" method="POST" id="form-registro-dinamico" novalidate>                
                 <div class="input-group-custom step-group active" id="step-1">
                     <label for="nombre">¿Cómo te llamas?</label>
                     <div class="input-wrapper">
@@ -85,4 +84,7 @@
     </div>
 
 </div>
+<script>
+    const BASE_URL = "<?= base_url() ?>"; 
+</script>
 <script src="<?= base_url('js/vistas/register.js') ?>"></script>

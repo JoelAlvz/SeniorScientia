@@ -1,0 +1,90 @@
+        body { 
+            margin: 0; 
+            background: #f9f9f9; 
+            font-family: sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+        .instruccion-flotante { 
+            background: #1e293b; 
+            color: white; 
+            padding: 12px 20px; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            margin-bottom: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
+            z-index: 10;
+            text-align: center;
+            border: 2px solid #4ade80;
+        }
+        
+        /* Ventana principal del minijuego con borde verde */
+        #escenario-scroll {
+            width: 440px;
+            height: 400px;
+            background: #1e293b;
+            border: 5px solid #4ade80;
+            overflow-y: scroll;
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+        }
+        
+        /* Fachada del edificio */
+        .contenido-edificio {
+            height: 1800px;
+            position: relative;
+            background-color: #1a202c;
+            background-image: repeating-linear-gradient(
+                0deg,
+                #0f172a,
+                #0f172a 150px,
+                #334155 150px,
+                #334155 156px
+            );
+        }
+
+        /* Estilo de las ventanas del edificio */
+        .ventana-edificio {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            background: #334155; /* Ventana apagada */
+            border: 3px solid #64748b;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        /* Ventana con luz encendida (tiene el sobre) */
+        .ventana-edificio.tiene-sobre {
+            background: #fbbf24; 
+            border-color: #d97706;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6), inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .ventana-edificio.tiene-sobre:hover {
+            transform: scale(1.1);
+            background: #f59e0b;
+        }
+        
+        #mensaje-exito {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #4ade80;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid #4ade80;
+            display: none;
+            text-align: center;
+        }

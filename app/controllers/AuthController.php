@@ -20,7 +20,8 @@ class AuthController extends Controller {
 
             if (!empty($data['nombre']) && !empty($data['email']) && !empty($data['password'])) {
                 if (Usuario::create($data)) {
-                    header('Location: /proyectoFinCurso/MayoresApp/public/'); 
+                    $config = include __DIR__ . '/../../config/app.php'; 
+                    header('Location: ' . $config['base_url'] . '/'); 
                     exit;
                 }
             }
@@ -71,8 +72,8 @@ class AuthController extends Controller {
             $_SESSION['user_nombre'] = $user['nombre'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_tipo'] = $user['tipo'];
-
-            header('Location: /proyectoFinCurso/MayoresApp/public/dashboard');
+            $config = include __DIR__ . '/../../config/app.php';
+            header('Location: ' . $config['base_url'] . '/dashboard');
             exit;
         } else {
             return $this->view('auth/login', ['error' => 'Email o contraseña incorrectos']);

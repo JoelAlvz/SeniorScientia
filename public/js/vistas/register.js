@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (validarFormatoEmail(correoTexto)) {
             emailTimeout = setTimeout(async () => {
                 try {
-                    const response = await fetch('/proyectoFinCurso/MayoresApp/public/verificar-email', {
+                    const response = await fetch(`${BASE_URL}/verificar-email`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: correoTexto })

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'base_url' => 'http://localhost/proyectoFinCurso/MayoresApp/public'
+    'base_url' => 'http://localhost/SeniorScientia/public'
 ];
 
 ?>

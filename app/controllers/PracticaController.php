@@ -397,6 +397,15 @@ public function guardarSecuencia() {
         $this->view('practica/juego_arrastrar');
     }
 
+    public function juego_seleccion() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . base_url('login'));
+            exit;
+        }
+        $this->view('practica/juego_seleccion');
+    }
+    
     public function frases() {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user_id'])) {
@@ -405,5 +414,12 @@ public function guardarSecuencia() {
         }
         $this->view('practica/juego_teclado_frases');
     }
-
+    public function juego_rueda() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . base_url('login'));
+            exit;
+        }
+        $this->view('practica/juego_rueda');
+    }
 }

@@ -37,6 +37,8 @@ $router->get('/practica/clicks', 'PracticaController@clicks');
 $router->get('/practica/dobleclick', 'PracticaController@dobleclick');
 $router->get('/practica/arrastrar', 'PracticaController@arrastrar');
 $router->get('/practica/frases', 'PracticaController@frases'); 
+$router->get('/practica/juego_seleccion', 'PracticaController@juego_seleccion');
+$router->get('/practica/juego_rueda', 'PracticaController@juego_rueda'); 
 
 $router->get('/tutor/alumno/([0-9]+)', 'TutorController@verAlumno');
 $router->post('/tutor/guardar-mensaje', 'TutorController@guardarmensaje'); 

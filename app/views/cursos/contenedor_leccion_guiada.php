@@ -38,9 +38,7 @@
         </div>
 
         <div id="panel-practica" class="panel-practica-wrapper" style="display: none;">
-            <p class="banner-ayuda-practica">
-                💡 <strong>Práctica de la Clase:</strong> Busca la letra en tu teclado de la mesa y presiónala. ¡Suma puntos para avanzar!
-            </p>
+         
             
             <?php if ((int)$secuencia['id_secuencia'] === 1): ?>
                 <iframe src="<?= base_url('practica/raton?meta=0&origen=clases&actividad=' . $secuencia['id_secuencia']) ?>" class="iframe-juego-adaptado"></iframe>
@@ -50,6 +48,10 @@
                 <iframe src="<?= base_url('practica/dobleclick?meta=0&origen=clases&actividad=' . $secuencia['id_secuencia']) ?>" class="iframe-juego-adaptado"></iframe>
             <?php elseif ((int)$secuencia['id_secuencia'] === 4): ?>
                 <iframe src="<?= base_url('practica/arrastrar?meta=0&origen=clases&actividad=' . $secuencia['id_secuencia']) ?>" class="iframe-juego-adaptado"></iframe>
+            <?php elseif ((int)$secuencia['id_secuencia'] === 8): ?>
+                <iframe src="<?= base_url('practica/juego_seleccion?meta=5&origen=clases&actividad=' . $secuencia['id_secuencia']) ?>" class="iframe-juego-adaptado"></iframe>
+            <?php elseif ((int)$secuencia['id_secuencia'] === 9): ?>
+                <iframe src="<?= base_url('practica/juego_rueda?meta=3&origen=clases&actividad=' . $secuencia['id_secuencia']) ?>" class="iframe-juego-adaptado"></iframe>
             <?php elseif ((int)$secuencia['id_secuencia'] === 5): ?>
                 <iframe src="<?= base_url('practica/teclado?meta=10&tipo=puntos&origen=clases&id_juego=2&actividad=' . $secuencia['id_secuencia']) ?>" class="iframe-juego-adaptado recortado"></iframe>
             <?php else: ?>
