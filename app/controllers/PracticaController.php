@@ -36,7 +36,7 @@ public function index() {
             $ranking = $stmtRanking->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        $stmt = $db->query("SELECT * FROM juegos ORDER BY categoria, fecha_creacion DESC");
+        $stmt = $db->query("SELECT * FROM juegos ORDER BY categoria, fecha_creacion ASC");
         $juegos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $juegosAgrupados = ['raton' => [], 'teclado' => [], 'internet' => [], 'otros' => []];
@@ -199,7 +199,7 @@ public function guardarSecuencia() {
             $idSecuencia = $db->lastInsertId();
 
             $stmtActPersonalizada = $db->prepare("
-                INSERT INTO actividades_personalizadas (id_actividad, tutor_id, id_alumno, titulo, descripcion_general, fecha_creacion, estado) 
+                INSERT INTO  actividades_personalizadas (id_actividad, tutor_id, id_alumno, titulo, descripcion_general, fecha_creacion, estado) 
                 VALUES (?, ?, ?, ?, ?, NOW(), ?)
             ");
             $stmtActPersonalizada->execute([

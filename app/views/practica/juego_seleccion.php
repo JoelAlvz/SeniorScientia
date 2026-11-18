@@ -6,7 +6,7 @@
     <div class="juego-seleccion-container">
         <div style="flex-shrink: 0;">
             <h2 id="titulo-juego">¡Practicamos la Selección Múltiple!</h2>
-            <p id="texto-instruccion" class="instruccion-texto">Haz clic en varias manzanas para seleccionarlas y luego arrástralas o haz clic en la cesta.</p>
+            <p id="texto-instruccion" class="instruccion-texto">Mantén pulsado con el clic izquierdo cerca de varios iconos y arrastra el ratón por encima de ellos para seleccionarlos, luego arrástralos a la papelera.</p>
             
             <?php if(isset($_GET['meta'])): ?>
                 <p id="mensaje-meta-tutor" class="meta-tutor-texto">

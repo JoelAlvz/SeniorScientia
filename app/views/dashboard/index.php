@@ -29,12 +29,21 @@
 
 <div class="menu-container">
 
-    <?php if ($_SESSION['user_tipo'] === 'alumno'): ?>
-        <script>
-            setInterval(function() {
+<?php if ($_SESSION['user_tipo'] === 'alumno'): ?>
+    <script>
+        setInterval(function() {
+            const modalTareas = document.getElementById('modal-tareas-anteriores');
+            const modalMedallas = document.getElementById('modal-medallas-popup');
+            
+            const tareasAbierto = modalTareas && window.getComputedStyle(modalTareas).display === 'flex';
+            const medallasAbierto = modalMedallas && window.getComputedStyle(modalMedallas).display === 'flex';
+
+            // Solo recargamos si el alumno NO tiene ningún modal abierto
+            if (!tareasAbierto && !medallasAbierto) {
                 window.location.reload();
-            }, 20000);
-        </script>
+            }
+        }, 20000);
+    </script>
         <?php 
         $db = Database::connect();
         $id_alumno_sesion = $_SESSION['user_id'];
@@ -55,183 +64,243 @@
         $nota_tutor = $stmt->fetch(PDO::FETCH_ASSOC);
         ?>
 
-        <?php if ($nota_tutor): ?>
-            <div class="card-nota-aliento-container">
-                <div class="nota-icono">✉️</div>
-                <div class="nota-contenido">
-                    <h4>Nota de aliento de tu tutor(a) <strong><?= htmlspecialchars($nota_tutor['nombre_tutor']) ?></strong>:</h4>
-                    <p>"<?= htmlspecialchars($nota_tutor['mensaje']) ?>"</p>
-                    <small>Recibido el <?= date('d/m/Y', strtotime($nota_tutor['fecha_envio'])) ?> a las <?= date('H:i', strtotime($nota_tutor['fecha_envio'])) ?></small>                </div>
-            </div>
-        <?php endif; ?>
+        <div class="dashboard-alumno-wrapper">
 
-        <details class="desplegable-medallas">
-            <summary class="summary-medallas">🏅 Mis Medallas de Oro (Pulsar para ver)</summary>
-            <div class="cuerpo-medallas">
-                <?php 
-                $db = Database::connect();
-                $stmt = $db->prepare("
-                    SELECT s.titulo 
-                    FROM logros_alumnos l 
-                    JOIN secuencias_aprendizaje s ON l.id_actividad = s.id_secuencia 
-                    WHERE l.id_usuario = ?
-                ");
-                $stmt->execute([$_SESSION['user_id']]);
-                $medallas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
+            <!-- 1. NOTA DE ALIENTO (Si existe) -->
+            <?php if ($nota_tutor): ?>
+                <div class="card-nota-aliento-container">
+                    <div class="nota-icono">✉️</div>
+                    <div class="nota-contenido">
+                        <h4>Nota de aliento de tu tutor(a) <strong><?= htmlspecialchars($nota_tutor['nombre_tutor']) ?></strong>:</h4>
+                        <p>"<?= htmlspecialchars($nota_tutor['mensaje']) ?>"</p>
+                        <small>Recibido el <?= date('d/m/Y', strtotime($nota_tutor['fecha_envio'])) ?> a las <?= date('H:i', strtotime($nota_tutor['fecha_envio'])) ?></small>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-            <div class="flex-medallas">
-                <?php if ($medallas): ?>
-                    <?php foreach ($medallas as $m): ?>
-                        <div class="medalla-item">
-                            <div class="medalla-circulo">🥇</div>
-                            <p><?= htmlspecialchars($m['titulo']) ?></p>
+            <!-- 2. TARJETAS PRINCIPALES (Mis Clases y Practicar) -->
+            <div class="grid-aprendizaje-pro">
+                <div class="card alumno-pro">
+                    <div>
+                        <div class="card-alumno-header">
+                            <div class="card-alumno-icono">📚</div>
+                            <h3>Mis Clases</h3>
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p class="medalla-texto-vacio">¡Completa tu primera lección para ganar una medalla!</p>
-                <?php endif; ?>
-            </div>
-            </div>
-        </details>
-
-        <div class="grid-aprendizaje">
-            <div class="card alumno">
-                <div>
-                    <h3>Mis Clases</h3>
-                    <p>Aprende a usar tu ordenador paso a paso con explicaciones dinámicas.</p>
+                        <p>Aprende a usar tu ordenador paso a paso con explicaciones dinámicas.</p>
+                    </div>
+                    <a href="<?= base_url('cursos') ?>" class="btn-grande-premium-pro">EMPEZAR A APRENDER</a>
                 </div>
-                <a href="<?= base_url('cursos') ?>" class="btn-grande-premium">EMPEZAR A APRENDER</a>
+
+                <div class="card alumno-pro">
+                    <div>
+                        <div class="card-alumno-header">
+                            <div class="card-alumno-icono">🎮</div>
+                            <h3>Practicar</h3>
+                        </div>
+                        <p>Juegos interactivos diseñados para mejorar tu soltura con el ratón y el teclado.</p>
+                    </div>
+                    <a href="<?= base_url('practica') ?>" class="btn-grande-premium-pro">PRACTICAR AHORA</a>
+                </div>
             </div>
 
-            <div class="card alumno">
-                <div>
-                    <h3>Practicar</h3>
-                    <p>Juegos interactivos diseñados para mejorar tu soltura con el ratón y el teclado.</p>
+<!-- 3. CONTENEDOR UNIFICADO: TAREAS (IZQ) Y BOTÓN DE MEDALLAS POPUP (DER) -->
+<!-- 3. CONTENEDOR UNIFICADO: TAREAS Y MEDALLAS -->
+            <div class="tareas-medallero-contenedor">
+                
+                <!-- CABECERA: Título a la izquierda y Botón de Medallas a la derecha al mismo nivel -->
+                <div class="tareas-medallero-header">
+                    <h3>
+                        📋 Tareas de mi Tutor
+                    </h3>
+                    
+                    <div onclick="abrirModalMedallas()" >
+                       <a class="btn-medallas-popup-trigger"> 🏅 Mis Medallas de Oro (Pulsar para ver)</a>
+                    </div>
                 </div>
-                <a href="<?= base_url('practica') ?>" class="btn-grande-premium">PRACTICAR AHORA</a>
+
+                <!-- CONTENIDO DE TAREAS (Ocupando el 100% del ancho) -->
+                <div class="columna-tareas-seccion">
+                    <?php if ($vinculacion): ?>
+                        <?php 
+                        $rutas = [];
+                        $stmt = $db->prepare('
+                            SELECT s.* FROM secuencias_aprendizaje s 
+                            WHERE s.tutor_id = ? 
+                              AND (s.id_alumno IS NULL OR s.id_alumno = ?)
+                            ORDER BY s.fecha_creacion DESC
+                        ');
+                        $stmt->execute([$vinculacion['tutor_id'], $id_alumno_sesion]);
+                        $rutas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        ?>
+
+                        <?php if ($rutas): ?>
+                            <?php 
+                            $ultima_tarea = $rutas[0];
+                            $otras_tareas = array_slice($rutas, 1);
+                            ?>
+
+                            <div class="tareas-grid">
+                                <div class="tarea-item-card tarea-reciente-card" style="border-left-color: var(--color-exito); margin-bottom: 0; width: 100%;">
+                                    <div>
+                                        <?php if ($ultima_tarea['id_alumno'] !== null): ?>
+                                            <span class="badge-tarea-exclusiva">⭐ SOLO PARA TI</span>
+                                        <?php else: ?>
+                                            <span class="badge-tarea-nueva" style="background: var(--color-exito);">NUEVA TAREA</span>
+                                        <?php endif; ?>
+
+                                        <h4 class="titulo-tarea-destacada"><?= htmlspecialchars($ultima_tarea['titulo']) ?></h4>
+                                        <small class="info-tarea-destacada">Área: <strong><?= strtoupper($ultima_tarea['categoria']) ?></strong> | Asignada el: <?= date('d/m/Y', strtotime($ultima_tarea['fecha_creacion'])) ?></small>
+                                    </div>
+                                    
+                                    <a href="<?= base_url('practica/ver-secuencia/' . $ultima_tarea['id_secuencia']) ?>" class="btn-empezar-leccion" style="background: var(--color-exito);">
+                                        EMPEZAR LECCIÓN
+                                    </a>
+                                </div>
+                            </div>
+
+                            <?php if (!empty($otras_tareas)): ?>
+                                <div class="desplegable-tareas-historial btn-historial-trigger" onclick="abrirModalTareas()" style="margin-top: 15px;">
+                                    <div class="summary-tareas">📁 Ver otras tareas anteriores (<?= count($otras_tareas) ?>)</div>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Modal de tareas anteriores -->
+                            <div id="modal-tareas-anteriores" class="modal-personalizado-backdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 1000;">
+                                <div class="modal-personalizado-contenido">
+                                    <h3 class="modal-titulo-historial">Tareas Anteriores</h3>
+                                    <div class="cuerpo-tareas-historial">
+                                        <?php foreach ($otras_tareas as $ruta): ?>
+                                            <div class="tarea-item-card item-historial-card">
+                                                <div>
+                                                    <?php if ($ruta['id_alumno'] !== null): ?>
+                                                        <span class="badge-tarea-privada">⭐ PRIVADA</span>
+                                                    <?php endif; ?>
+                                                    <h4 class="titulo-tarea-historial"><?= htmlspecialchars($ruta['titulo']) ?></h4>
+                                                    <small class="fecha-tarea-historial">Creado el: <?= date('d/m/Y', strtotime($ruta['fecha_creacion'])) ?></small>
+                                                </div>
+                                                <a href="<?= base_url('practica/ver-secuencia/' . $ruta['id_secuencia']) ?>" class="btn-empezar-leccion btn-empezar-historial">
+                                                    EMPEZAR LECCIÓN
+                                                </a>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <div class="modal-footer-acciones">
+                                        <button type="button" onclick="cerrarModalTareas()" class="btn-cerrar-modal-tareas">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <?php else: ?>
+                            <div class="tareas-completadas-alerta" style="margin-bottom: 0;">
+                                <p>🎉 ¡Buen trabajo! No tienes tareas pendientes de tu tutor por ahora.</p>
+                                <span>Has completado con éxito todo lo que tenías asignado. ¡Sigue así!</span>
+                            </div>
+                        <?php endif; ?>
+
+                    <?php else: ?>
+                        <!-- Formulario de vinculación si no tiene tutor -->
+                        <div class="vinculacion-box" ><p>¿Tienes un tutor?</p>
+                            <p style="font-size: 0.95rem; margin-bottom: 12px; color: var(--texto-secundario);">Conéctate con el código de tu tutor:</p>
+                            
+                            <form action="<?= base_url('perfil/vincular') ?>" method="POST" class="form-vinculacion" >
+                                <input type="number" name="codigo_tutor" placeholder="Ejemplo: 12" required class="input-codigo-tutor">
+                                <button type="submit" class="btn-conectar-tutor" style=" padding: 10px; font-size: 0.95rem;">CONECTAR</button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
             </div>
+
+            <!-- MODAL POPUP PARA MOSTRAR LAS MEDALLAS -->
+            <div id="modal-medallas-popup" class="modal-personalizado-backdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 1000;">
+                <div class="modal-personalizado-contenido">
+                    <h3 class="modal-titulo-historial" style="color: var(--color-oro-oscuro); display: flex; align-items: center; gap: 10px;">
+                        🥇 Mis Medallas de Oro Conseguidas
+                    </h3>
+                    
+                    <div class="cuerpo-tareas-historial">
+                        <?php 
+                        $stmtMedallas = $db->prepare("
+                            SELECT s.titulo 
+                            FROM logros_alumnos l 
+                            JOIN secuencias_aprendizaje s ON l.id_actividad = s.id_secuencia 
+                            WHERE l.id_usuario = ?
+                        ");
+                        $stmtMedallas->execute([$_SESSION['user_id']]);
+                        $medallas = $stmtMedallas->fetchAll(PDO::FETCH_ASSOC);
+                        ?>
+
+                        <?php if ($medallas): ?>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <?php foreach ($medallas as $m): ?>
+                                    <div class="tarea-item-card item-historial-card" style="border-left: 5px solid var(--color-oro); margin-bottom: 0;">
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            <span style="font-size: 2.2rem; background: var(--color-oro-fondo); padding: 8px; border-radius: 50%; border: 2px solid var(--color-oro);">🥇</span>
+                                            <h4 style="margin: 0; color: var(--texto-principal); font-size: 1.1rem;"><?= htmlspecialchars($m['titulo']) ?></h4>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <div style="text-align: center; padding: 30px;">
+                                <p style="color: var(--texto-secundario); font-style: italic; font-size: 1.1rem; margin: 0;">¡Todavía no tienes medallas! Completa lecciones de práctica o tareas de tu tutor para ganar la tuya.</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="modal-footer-acciones">
+                        <button type="button" onclick="cerrarModalMedallas()" class="btn-cerrar-modal-tareas">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL POPUP PARA MOSTRAR LAS MEDALLAS -->
+            <div id="modal-medallas-popup" class="modal-personalizado-backdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 1000;">
+                <div class="modal-personalizado-contenido">
+                    <h3 class="modal-titulo-historial" style="color: var(--color-oro-oscuro); display: flex; align-items: center; gap: 10px;">
+                        🥇 Mis Medallas de Oro Conseguidas
+                    </h3>
+                    
+                    <div class="cuerpo-tareas-historial">
+                        <?php 
+                        $stmtMedallas = $db->prepare("
+                            SELECT s.titulo 
+                            FROM logros_alumnos l 
+                            JOIN secuencias_aprendizaje s ON l.id_actividad = s.id_secuencia 
+                            WHERE l.id_usuario = ?
+                        ");
+                        $stmtMedallas->execute([$_SESSION['user_id']]);
+                        $medallas = $stmtMedallas->fetchAll(PDO::FETCH_ASSOC);
+                        ?>
+
+                        <?php if ($medallas): ?>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <?php foreach ($medallas as $m): ?>
+                                    <div class="tarea-item-card item-historial-card" style="border-left: 5px solid var(--color-oro); margin-bottom: 0;">
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            <span style="font-size: 2.2rem; background: var(--color-oro-fondo); padding: 8px; border-radius: 50%; border: 2px solid var(--color-oro);">🥇</span>
+                                            <h4 style="margin: 0; color: var(--texto-principal); font-size: 1.1rem;"><?= htmlspecialchars($m['titulo']) ?></h4>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <div style="text-align: center; padding: 30px;">
+                                <p style="color: var(--texto-secundario); font-style: italic; font-size: 1.1rem; margin: 0;">¡Todavía no tienes medallas! Completa lecciones de práctica o tareas de tu tutor para ganar la tuya.</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="modal-footer-acciones">
+                        <button type="button" onclick="cerrarModalMedallas()" class="btn-cerrar-modal-tareas">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-
-        <?php if ($vinculacion): ?>
-            <div class="tareas-contenedor">
-                <h3>Tareas de mi Tutor:</h3>
-                <?php 
-                $rutas = [];
-                $stmt = $db->prepare('
-                    SELECT s.* FROM secuencias_aprendizaje s 
-                    WHERE s.tutor_id = ? 
-                      AND (s.id_alumno IS NULL OR s.id_alumno = ?)
-                    ORDER BY s.fecha_creacion DESC
-                ');
-                $stmt->execute([$vinculacion['tutor_id'], $id_alumno_sesion]);
-                $rutas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
-
-                <?php if ($rutas): ?>
-                    <?php 
-                    $ultima_tarea = $rutas[0];
-                    $otras_tareas = array_slice($rutas, 1);
-                    ?>
-
-                    <div class="tareas-grid">
-                        <div class="tarea-item-card tarea-reciente-card" style="border-left-color: var(--color-exito);">
-                            <div>
-                                <?php if ($ultima_tarea['id_alumno'] !== null): ?>
-                                    <span class="badge-tarea-exclusiva">⭐ SOLO PARA TI</span>
-                                <?php else: ?>
-                                    <span class="badge-tarea-nueva" style="background: var(--color-exito);">NUEVA TAREA</span>
-                                <?php endif; ?>
-
-                                <h4 class="titulo-tarea-destacada"><?= htmlspecialchars($ultima_tarea['titulo']) ?></h4>
-                                <small class="info-tarea-destacada">Área: <strong><?= strtoupper($ultima_tarea['categoria']) ?></strong> | Asignada el: <?= date('d/m/Y', strtotime($ultima_tarea['fecha_creacion'])) ?></small>
-                            </div>
-                            
-                            <a href="<?= base_url('practica/ver-secuencia/' . $ultima_tarea['id_secuencia']) ?>" class="btn-empezar-leccion" style="background: var(--color-exito);">
-                                EMPEZAR LECCIÓN
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="desplegable-tareas-historial btn-historial-trigger" onclick="abrirModalTareas()">
-                        <div class="summary-tareas">📁 Ver otras tareas anteriores (<?= count($otras_tareas) ?>)</div>
-                    </div>
-
-                    <div id="modal-tareas-anteriores" class="modal-personalizado-backdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
-                        <div class="modal-personalizado-contenido">
-                            
-                            <h3 class="modal-titulo-historial">Tareas Anteriores</h3>
-                            
-                            <div class="cuerpo-tareas-historial">
-                                <?php if (!empty($otras_tareas)): ?>
-                                    <?php foreach ($otras_tareas as $ruta): ?>
-                                        <div class="tarea-item-card item-historial-card">
-                                            <div>
-                                                <?php if ($ruta['id_alumno'] !== null): ?>
-                                                    <span class="badge-tarea-privada">⭐ PRIVADA</span>
-                                                <?php endif; ?>
-                                                <h4 class="titulo-tarea-historial"><?= htmlspecialchars($ruta['titulo']) ?></h4>
-                                                <small class="fecha-tarea-historial">Creado el: <?= date('d/m/Y', strtotime($ruta['fecha_creacion'])) ?></small>
-                                            </div>
-                                            <a href="<?= base_url('practica/ver-secuencia/' . $ruta['id_secuencia']) ?>" class="btn-empezar-leccion btn-empezar-historial">
-                                                EMPEZAR LECCIÓN
-                                            </a>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <p class="texto-desplegable-vacio">No tienes más tareas antiguas para realizar.</p>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="modal-footer-acciones">
-                                <button type="button" onclick="cerrarModalTareas()" class="btn-cerrar-modal-tareas">Cerrar</button>
-                            </div>
-                        </div>
-                    </div>
-
-                <?php else: ?>
-                    <div class="tareas-completadas-alerta">
-                        <p>🎉 ¡Buen trabajo! No tienes tareas pendientes de tu tutor por ahora.</p>
-                        <span>Has completado con éxito todo lo que tenías asignado. ¡Sigue así!</span>
-                    </div>
-                <?php endif; ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if (!$vinculacion): ?>
-            <div class="vinculacion-box">
-                <h3>¿Tienes a alguien que te ayuda?</h3>
-                <p>Si tu hijo, nieto o tutor tiene un código, escríbelo aquí para que pueda ver tus progresos:</p>
-                
-                <form action="<?= base_url('perfil/vincular') ?>" method="POST" class="form-vinculacion">
-                    <input type="number" name="codigo_tutor" placeholder="Ejemplo: 12" required class="input-codigo-tutor">
-                    <button type="submit" class="btn-conectar-tutor">CONECTAR CON MI TUTOR</button>
-                </form>
-                
-                <?php if (isset($_SESSION['flash_vinculacion'])): ?>
-                    <?php 
-                    $tipo = $_SESSION['flash_vinculacion']['tipo'];
-                    $mensaje = $_SESSION['flash_vinculacion']['msg'];
-                    
-                    $clase_alerta = 'texto-error-inline'; 
-                    if ($tipo === 'exito') $clase_alerta = 'texto-exito-inline';
-                    if ($tipo === 'aviso') $clase_alerta = 'texto-aviso-inline';
-                    ?>
-                    
-                    <p class="<?= $clase_alerta ?> flash-alerta-vinculo">
-                        <?= htmlspecialchars($mensaje) ?>
-                    </p>
-                    
-                    <?php unset($_SESSION['flash_vinculacion']); ?>
-                <?php endif; ?>
-
-                <?php if (isset($_GET['error']) && $_GET['error'] === 'codigo_invalido'): ?>
-                    <p class="texto-error-inline flash-alerta-vinculo">Ese código no es válido. Por favor, pídele el número correcto a tu tutor.</p>
-                <?php endif; ?>
-            </div>
-        <?php endif; ?>
-
+        <!-- Botón flotante y Ventana de Accesibilidad -->
         <button id="btn-accesibilidad" class="btn-flotante-accesibilidad">👁️</button>
         <div id="menu-accesibilidad" class="panel-flotante-opciones">
             <h4>Opciones de Vista</h4>
@@ -246,6 +315,7 @@
             <p class="panel-seccion-titulo">Asistencia por voz:</p>
             <button id="btn-voz" onclick="alternarVozAsistida()" class="btn-panel-voz">🔊 Activar Voz</button>
         </div>
+
 
     <?php elseif ($_SESSION['user_tipo'] === 'tutor'): ?>
         
